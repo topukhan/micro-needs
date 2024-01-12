@@ -34,7 +34,7 @@ class JapaneseController extends Controller
         $validator = [
             'japanese' => 'required',
             'meaning' => 'required',
-            'note' => 'min:10',
+            'note' => 'nullable|min:10',
         ];
         $request->validate($validator);
         try {
@@ -73,7 +73,7 @@ class JapaneseController extends Controller
         $validator = [
             'japanese' => 'required',
             'meaning' => 'required',
-            'note' => 'min:10',
+            'note' => 'nullable|min:10',
         ];
         $request->validate($validator);
         try {
