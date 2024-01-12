@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HashController;
+use App\Http\Controllers\Japanese\JapaneseController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,7 +29,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/hash', [HashController::class, 'index'])->name('hash.index');
     Route::post('/decrypt', [HashController::class, 'decrypt'])->name('hash.decrypt');
 
-
+    // Japaneses
+    Route::resource('/japaneses', JapaneseController::class);
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
