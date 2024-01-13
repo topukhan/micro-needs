@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('japaneses', function (Blueprint $table) {
             $table->id();
-            $table->string('japanese');
-            $table->string('meaning');
+            $table->string('japanese_word');
+            $table->string('bangla_meaning');
+            $table->string('english_meaning');
+            $table->string('example');
             $table->text('note')->nullable();
             $table->timestamps();
         });

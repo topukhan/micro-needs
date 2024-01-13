@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Japanese;
 use App\Http\Controllers\Controller;
 use App\Models\Japanese;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class JapaneseController extends Controller
 {
@@ -30,20 +31,31 @@ class JapaneseController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $validator = [
-            'japanese' => 'required',
-            'meaning' => 'required',
-            'note' => 'nullable|min:10',
-        ];
-        $request->validate($validator);
+
+        $validator = Validator::make($request->all(), [
+            'japanese_word' => 'required',
+        'example' => 'nullable|min:15',
+        'note' => 'nullable|min:10',
+        'bangla_meaning' => 'required_without:english_meaning',
+        'english_meaning' => 'required_without:bangla_meaning',
+        ]);
+        dd($validator);
+        // Custom rule to check at least one of the language-specific meaning fields
+        $validator->sometimes('bangla_meaning', 'required_without:english_meaning', function ($input) {
+            return empty($input->english_meaning);
+        });
+
+        $validator->sometimes('english_meaning', 'required_without:bangla_meaning', function ($input) {
+            return empty($input->bangla_meaning);
+        });
+dd('validated');
         try {
             $data = Japanese::create([
                 'japanese' => $request->japanese,
                 'meaning' => $request->meaning,
                 'note' => $request->note,
             ]);
-            return redirect()->route('japaneses.index')->withMessage('Word Added');
+            return redirect()->route('japaneses.index')->withMessage('Translation Added');
         } catch (\Throwable $th) {
             return redirect()->back()->withInput()->withError($th);
         }
