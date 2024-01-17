@@ -19,7 +19,7 @@
                 <label class="block text-sm font-medium text-gray-700">Select Language</label>
                 <div class="flex space-x-4">
                     <button type="button" onclick="toggleInput('bangla')" class="px-4 py-2 bg-blue-500 text-white rounded-md">Bangla</button>
-                    <button type="button" onclick="toggleInput('english')" class="px-4 py-2 bg-blue-500 text-white rounded-md">English</button>
+                    <button type="button" onclick="toggleInput('english')" class="px-4 ml-3 py-2 bg-blue-500 text-white rounded-md">English</button>
                 </div>
             </div>
 

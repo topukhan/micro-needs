@@ -32,29 +32,27 @@ class JapaneseController extends Controller
     public function store(Request $request)
     {
 
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'japanese_word' => 'required',
-        'example' => 'nullable|min:15',
-        'note' => 'nullable|min:10',
-        'bangla_meaning' => 'required_without:english_meaning',
-        'english_meaning' => 'required_without:bangla_meaning',
+            'example' => 'nullable|min:15',
+            'note' => 'nullable|min:10',
+            'bangla_meaning' => 'required_without:english_meaning',
+            'english_meaning' => 'required_without:bangla_meaning',
         ]);
-        dd($validator);
-        // Custom rule to check at least one of the language-specific meaning fields
-        $validator->sometimes('bangla_meaning', 'required_without:english_meaning', function ($input) {
-            return empty($input->english_meaning);
-        });
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
 
-        $validator->sometimes('english_meaning', 'required_without:bangla_meaning', function ($input) {
-            return empty($input->bangla_meaning);
-        });
-dd('validated');
         try {
             $data = Japanese::create([
                 'japanese' => $request->japanese,
                 'meaning' => $request->meaning,
                 'note' => $request->note,
+                'bangla_meaning' => $request->bangla_meaning,
+                'english_meaning' => $request->english_meaning,
             ]);
+            dd($data);
             return redirect()->route('japaneses.index')->withMessage('Translation Added');
         } catch (\Throwable $th) {
             return redirect()->back()->withInput()->withError($th);
