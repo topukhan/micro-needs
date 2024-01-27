@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/hash', [HashController::class, 'index'])->name('hash.index');
     Route::post('/decrypt', [HashController::class, 'decrypt'])->name('hash.decrypt');
+    Route::post('/encrypt', [HashController::class, 'encrypt'])->name('hash.encrypt');
 
     // Japaneses
     Route::resource('/japaneses', JapaneseController::class);

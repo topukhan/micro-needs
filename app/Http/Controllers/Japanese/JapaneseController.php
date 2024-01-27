@@ -43,16 +43,16 @@ class JapaneseController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
         }
-
+        // dd($request->all());
         try {
             $data = Japanese::create([
-                'japanese' => $request->japanese,
-                'meaning' => $request->meaning,
-                'note' => $request->note,
+                'japanese_word' => $request->japanese_word,
                 'bangla_meaning' => $request->bangla_meaning,
                 'english_meaning' => $request->english_meaning,
+                'example' => $request->example,
+                'note' => $request->note,
             ]);
-            dd($data);
+            // dd($data);
             return redirect()->route('japaneses.index')->withMessage('Translation Added');
         } catch (\Throwable $th) {
             return redirect()->back()->withInput()->withError($th);
@@ -80,16 +80,22 @@ class JapaneseController extends Controller
      */
     public function update(Request $request, Japanese $japanese)
     {
-        $validator = [
-            'japanese' => 'required',
-            'meaning' => 'required',
+        $validator = Validator::make($request->all(), [
+            'japanese_word' => 'required',
+            'example' => 'nullable|min:15',
             'note' => 'nullable|min:10',
-        ];
-        $request->validate($validator);
+            'bangla_meaning' => 'required_without:english_meaning',
+            'english_meaning' => 'required_without:bangla_meaning',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
         try {
             $japanese->update([
-                'japanese' => $request->japanese,
-                'meaning' => $request->meaning,
+                'japanese_word' => $request->japanese_word,
+                'bangla_meaning' => $request->bangla_meaning,
+                'english_meaning' => $request->english_meaning,
+                'example' => $request->example,
                 'note' => $request->note,
             ]);
             return redirect()->route('japaneses.index')->withMessage('Word Updated');
