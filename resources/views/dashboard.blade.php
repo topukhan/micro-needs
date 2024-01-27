@@ -25,6 +25,11 @@
                         Japanese Words
                     </a>
 
+                    <!--Payment Gateway  Button -->
+                    <a href="{{ route('japaneses.index') }}" class="bg-sky-600 rounded py-2 px-3 text-white">
+                        Payment Gateway
+                    </a>
+
 
                     <!-- Add more buttons for additional features -->
 
