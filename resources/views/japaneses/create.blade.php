@@ -66,11 +66,13 @@
             
         </form>
 
+        @push('scripts')    
         <script>
             function toggleInput(language) {
                 var inputField = document.getElementById(language + 'Input');
                 inputField.style.display = (inputField.style.display === 'none' || inputField.style.display === '') ? 'block' : 'none';
             }
         </script>
+        @endpush
     </div>
 </x-frontend.layouts.master>
