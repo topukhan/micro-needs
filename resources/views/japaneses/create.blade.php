@@ -57,22 +57,25 @@
             <!-- Submit Button -->
             <div>
                 <!-- Back to List Link -->
-                    <a href="{{ route('japaneses.index') }}"
-                        class="bg-gradient-to-r from-sky-100 to-sky-500 text-gray-800 py-2 px-4 rounded-full shadow-2xl">
-                        <i class="fas fa-arrow-left"></i> Back to List
-                    </a>
-                <button type="submit" class="px-4 py-2 mx-2 bg-gradient-to-l from-sky-600 to-sky-900 shadow-2xl text-white rounded-full">Create Entry</button>
+                <a href="{{ route('japaneses.index') }}"
+                    class="bg-gradient-to-r from-sky-100 to-sky-500 text-gray-800 py-2 px-4 rounded-full shadow-2xl">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </a>
+                <button type="submit"
+                    class="px-4 py-2 mx-2 bg-gradient-to-l from-sky-600 to-sky-900 shadow-2xl text-white rounded-full">Create
+                    Entry</button>
             </div>
-            
+
         </form>
 
-        @push('scripts')    
-        <script>
-            function toggleInput(language) {
-                var inputField = document.getElementById(language + 'Input');
-                inputField.style.display = (inputField.style.display === 'none' || inputField.style.display === '') ? 'block' : 'none';
-            }
-        </script>
+        @push('scripts')
+            <script>
+                function toggleInput(language) {
+                    var inputField = document.getElementById(language + 'Input');
+                    inputField.style.display = (inputField.style.display === 'none' || inputField.style.display === '') ? 'block' :
+                        'none';
+                }
+            </script>
         @endpush
     </div>
 </x-frontend.layouts.master>

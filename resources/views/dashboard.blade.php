@@ -30,6 +30,11 @@
                         Payment Gateway
                     </a>
 
+                    <!-- Web API's  Button -->
+                    <a href="{{ route('api.index') }}" class="bg-sky-600 rounded py-2 px-3 text-white">
+                        Web API's
+                    </a>
+
 
                     <!-- Add more buttons for additional features -->
 

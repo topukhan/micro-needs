@@ -20,8 +20,12 @@
                         {{ __('Japaneses') }}
                     </x-nav-link>
                     {{-- Payment Gateway --}}
-                    <x-nav-link :href="route('paymentGateways')" :active="request()->routeIs('japaneses.index')">
+                    <x-nav-link :href="route('paymentGateways')" :active="request()->routeIs('paymentGateways')">
                         {{ __('Payment Gateway') }}
+                    </x-nav-link>
+                    {{-- Web API --}}
+                    <x-nav-link :href="route('api.index')" :active="request()->routeIs('api.index')">
+                        {{ __('Web API') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -90,9 +94,13 @@
             <x-responsive-nav-link :href="route('japaneses.index')" :active="request()->routeIs('japaneses.index')">
                 {{ __('Japaneses') }}
             </x-responsive-nav-link>
-            {{-- Japanese --}}
+            {{-- payment gateway --}}
             <x-responsive-nav-link :href="route('paymentGateways')" :active="request()->routeIs('paymentGateways')">
                 {{ __('Payment Gateways') }}
+            </x-responsive-nav-link>
+            {{-- Web API --}}
+            <x-responsive-nav-link :href="route('api.index')" :active="request()->routeIs('api.index')">
+                {{ __('Web API') }}
             </x-responsive-nav-link>
         </div>
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\HashController;
 use App\Http\Controllers\Japanese\JapaneseController;
 use App\Http\Controllers\ProfileController;
@@ -51,6 +52,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
     //SSLCOMMERZ END
+
+    Route::get('/web-api', [ApiController::class, 'index'])->name('api.index');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
