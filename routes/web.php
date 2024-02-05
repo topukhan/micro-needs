@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
     //SSLCOMMERZ END
 
     Route::get('/web-api', [ApiController::class, 'index'])->name('api.index');
+    Route::post('/weather-map', [ApiController::class, 'weatherMapApi'])->name('api.weathermap');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

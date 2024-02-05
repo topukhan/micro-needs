@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log(apiUrl);
 
-        // call checkweather function with inputed city name
+        // call checkweather function with inputted city name
         checkWeather()
     }
 
@@ -39,10 +39,17 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('cityName').innerHTML = data.location.name
             document.getElementById('humidity').innerHTML = data.current.humidity
             document.getElementById('windSpeed').innerHTML = data.current.wind_kph
+            document.getElementById('localTime').innerHTML = data.current.last_updated
+            document.getElementById('skyCondition').innerHTML = data.current.condition.text
             document.getElementById('weatherIcon').setAttribute('src', data.current.condition.icon)
         } else if (data.error.code == 1006) {
             console.log(data.error.message)
             document.getElementById('responseMessage').innerHTML = data.error.message
+            setTimeout(() => {
+                document.getElementById(
+                    "responseMessage"
+                ).innerHTML = "";
+            }, 5000);
 
         } else {
             console.log('something went wrong')
