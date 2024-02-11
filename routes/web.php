@@ -53,7 +53,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
     //SSLCOMMERZ END
 
-    Route::get('/web-api', [ApiController::class, 'index'])->name('api.index');
+    Route::get('/web-api', [ApiController::class, 'apis'])->name('api.index');
+    Route::get('/weather-api', [ApiController::class, 'weatherAPIIndex'])->name('api.weather.index');
+    Route::get('/news-api', [ApiController::class, 'newsAPIIndex'])->name('api.news.index');
+
     Route::post('/weather-map', [ApiController::class, 'weatherMapApi'])->name('api.weathermap');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
