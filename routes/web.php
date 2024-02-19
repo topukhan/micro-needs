@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\ApiController;
+use App\Http\Controllers\API\CountryController;
 use App\Http\Controllers\HashController;
 use App\Http\Controllers\Japanese\JapaneseController;
 use App\Http\Controllers\ProfileController;
@@ -58,6 +59,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/news-api', [ApiController::class, 'newsAPIIndex'])->name('api.news.index');
 
     Route::post('/weather-map', [ApiController::class, 'weatherMapApi'])->name('api.weathermap');
+    
+    Route::get('/country-info', [CountryController::class, 'index'])->name('api.country.index');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -1,47 +1,7 @@
 <x-frontend.layouts.master>
-    @push('css')
-        <style>
-            /* Add this CSS to your existing styles or in a separate stylesheet */
-
-            /* Define the keyframes for the spinner animation */
-            @keyframes spin {
-                to {
-                    transform: rotate(360deg);
-                }
-            }
-
-            /* Style for the spinner */
-            .spinner {
-                border: 4px solid rgba(255, 255, 255, 0.3);
-                border-radius: 50%;
-                border-top: 4px solid #3498db;
-                width: 20px;
-                height: 20px;
-                animation: spin 1s linear infinite;
-                margin-right: 8px;
-                /* Adjust the margin as needed */
-                display: inline-block;
-                vertical-align: middle;
-            }
-
-            /* Apply the spinner style to the button when it's in the loading state */
-            #newsApiForm.loading button::after {
-                content: "";
-                display: inline-block;
-                border: 2px solid transparent;
-                border-top-color: #3498db;
-                border-radius: 50%;
-                width: 16px;
-                height: 16px;
-                animation: spin 0.7s linear infinite;
-                margin-left: 6px;
-                /* Adjust the margin as needed */
-            }
-        </style>
-    @endpush
     <!-- News Card Component -->
     <div class="w-full py-4 mx-auto p-5 rounded-lg text-black dark:text-slate-100 bg-slate-200 dark:bg-slate-900">
-        <h2 class="py-2 px-4">News API</h2>
+        <h2 class="py-2 px-4">News API (newsdata.io)</h2>
         <form id="newsApiForm" class="p-4">
             <input id="topicInput" class="border p-2 focus:border-blue-600 focus:ring-blue-500 text-black rounded"
                 type="text" placeholder="Enter topic name" spellcheck="false" required>

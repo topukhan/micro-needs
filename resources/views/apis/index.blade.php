@@ -19,6 +19,10 @@
                     <a href="{{ route('api.news.index') }}" class="bg-green-500 rounded py-2 px-3 text-white">
                         News API
                     </a>
+                    <!-- Country Info API -->
+                    <a href="{{ route('api.country.index') }}" class="bg-emerald-600 rounded py-2 px-3 text-white">
+                        Country Info API
+                    </a>
 
                     <!-- Add more buttons for additional features -->
 
