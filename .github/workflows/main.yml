@@ -15,7 +15,7 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: ftp.uupams.com
-        username: ${{ env.SERVER_USERNAME }}
+        username: uupamsTOpu@uupams.com
         password: ${{ secrets.SERVER_PASSWORD }}
         protocol: ftp
         local-dir: "public/build"
