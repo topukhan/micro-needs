@@ -1,0 +1,21 @@
+on: 
+  push:
+    branches:
+      - master
+name: Deploy website on push
+jobs:
+  web-deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get latest code
+      uses: actions/checkout@v3
+    
+    - name: Sync files to microneeds.uupams.com
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ env.server_name }}
+        username: ${{ env.server_username }}
+        password: ${{ secrets.server_password }}
+        target: "/microneeds.uupams.com"
+        source: "public/build"
