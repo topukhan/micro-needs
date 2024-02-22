@@ -14,7 +14,7 @@ jobs:
     - name: Sync files to microneeds.uupams.com
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
-        server: ${{ env.server_name }}
+        server: ftp.uupams.com
         username: ${{ env.server_username }}
         password: ${{ secrets.server_password }}
         target: "/microneeds.uupams.com"
