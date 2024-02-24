@@ -18,4 +18,4 @@ jobs:
         username: uupamsTOpu@uupams.com
         password: ${{ secrets.SERVER_PASSWORD }}
         protocol: ftp
-        server-dir: "/home/uupamsc1/micro-needs.uupams.com/"
+        server-dir: "/../micro-needs.uupams.com/"
