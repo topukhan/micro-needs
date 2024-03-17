@@ -16,7 +16,7 @@
                         Generate Hash
                     </a>
                     <!-- QR Code Button -->
-                    <a href="{{ route('japaneses.index') }}" class="bg-green-500 rounded py-2 px-3 text-white">
+                    <a href="{{ route('qrcode.index') }}" class="bg-green-500 rounded py-2 px-3 text-white">
                         Generate QR Code
                     </a>
 
@@ -31,7 +31,7 @@
                     </a>
 
                     <!-- Web API's  Button -->
-                    <a href="{{ route('api.index') }}" class="bg-sky-600 rounded py-2 px-3 text-white">
+                    <a href="{{ route('api.index') }}" class="bg-amber-600 rounded py-2 px-3 text-white">
                         Web API's
                     </a>
 

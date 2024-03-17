@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\API\CountryController;
 use App\Http\Controllers\HashController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Japanese\JapaneseController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PaymentGateway\SslCommerzPaymentController;
@@ -31,6 +32,9 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// guest login route 
+Route::post('/guest/login', [HomeController::class, 'guestLogin'])->name('guest.login');
+
 Route::middleware('auth')->group(function () {
     //hashing
     Route::get('/hash', [HashController::class, 'index'])->name('hash.index');
@@ -54,6 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
     //SSLCOMMERZ END
 
+    // API's
     Route::get('/web-api', [ApiController::class, 'apis'])->name('api.index');
     Route::get('/weather-api', [ApiController::class, 'weatherAPIIndex'])->name('api.weather.index');
     Route::get('/news-api', [ApiController::class, 'newsAPIIndex'])->name('api.news.index');
@@ -61,6 +66,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/weather-map', [ApiController::class, 'weatherMapApi'])->name('api.weathermap');
     
     Route::get('/country-info', [CountryController::class, 'index'])->name('api.country.index');
+    // End API
+
+    // QR code 
+    Route::view('/qrcode', 'qrcode.index')->name('qrcode.index');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
