@@ -35,7 +35,10 @@
                         Web API's
                     </a>
 
-
+                    <!-- Web API's  Button -->
+                    <a href="{{ route('posts.index') }}" class="bg-red-600 rounded py-2 px-3 text-white">
+                        Gate Policy
+                    </a>
                     <!-- Add more buttons for additional features -->
 
                 </div>

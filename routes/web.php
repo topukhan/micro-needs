@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\API\CountryController;
+use App\Http\Controllers\gatePolicy\PostController;
 use App\Http\Controllers\HashController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Japanese\JapaneseController;
@@ -74,6 +75,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Post for auth check (gate policy)
+    Route::resource('/posts', PostController::class);
+
+
 });
 
 require __DIR__ . '/auth.php';
