@@ -24,7 +24,7 @@ class PostController extends Controller
     public function create()
     {
         return view('gatePolicy.create');
-        
+
     }
 
     /**
@@ -57,10 +57,10 @@ class PostController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit( Post $post)
+    public function edit(Post $post)
     {
         return view('gatePolicy.edit', compact('post'));
-        
+
     }
 
     /**
@@ -68,10 +68,12 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        if (! Gate::allows('update-post', $post)) {
-            abort(403);
-        }
-        
+        // if (! Gate::allows('update-post', $post)) {
+        //     abort(403);
+        // }
+        // dd('hi');
+        $this->authorize('update', $post);
+
         $request->validate([
             'content' => 'required|min:5'
         ]);
@@ -89,15 +91,17 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Post $post)
     {
         try {
+            $this->authorize('delete', $post);
+
             // Find the post by its ID
-            $post = Post::findOrFail($id);
-            
+            // $post = Post::findOrFail($post);
+
             // Delete the post
             $post->delete();
-            
+
             return redirect()->route('posts.index')->with(['message' => 'Post deleted successfully']);
         } catch (\Throwable $th) {
             return redirect()->back()->with('error', $th->getMessage());
