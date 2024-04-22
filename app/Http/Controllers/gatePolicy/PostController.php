@@ -5,6 +5,7 @@ namespace App\Http\Controllers\gatePolicy;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class PostController extends Controller
 {
@@ -67,6 +68,10 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+        if (! Gate::allows('update-post', $post)) {
+            abort(403);
+        }
+        
         $request->validate([
             'content' => 'required|min:5'
         ]);
