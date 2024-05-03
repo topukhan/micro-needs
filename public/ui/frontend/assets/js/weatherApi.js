@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log('searched city: ', city);
 
-        console.log(apiUrl);
+        // console.log(apiUrl);
 
         // call checkweather function with inputted city name
         checkWeather()

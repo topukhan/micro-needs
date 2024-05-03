@@ -17,7 +17,7 @@
                         id="weatherIcon">
                     <span class="text-4xl font-bold" id="temperature">0</span><span class="text-3xl">°C</span>
                     <h2 class="text-lg" id="cityName"></h2>
-                </div>
+                </div>  
 
                 <div class="flex justify-around mt-8 py-3">
                     <div class="flex items-center">
@@ -65,7 +65,7 @@
             <div class="md:w-1/2 w-full py-4 bg-purple-600 text-white mx-auto p-5 rounded-lg">
                 <h2 class="py-2">Weather Map API</h2>
                 <form id="weatherMapApiForm">
-                    <input id="cityNameMapInput"
+                    <input id="cityNameMapInput" name="cityMapInput"
                         class="border p-2 focus:border-green-600 focus:ring-green-500 text-black" type="text"
                         placeholder="Enter city Name" spellcheck="false">
                     <button class="bg-green-500 rounded py-2 px-3 text-white mt-2" type="submit">Search</button>
@@ -104,7 +104,8 @@
 
         @push('scripts')
             <script src="{{ asset('ui/frontend/assets/js/weatherApi.js') }}"></script>
-            <script src="{{ asset('ui/frontend/assets/js/weatherMap.js') }}" data-route="{{ route('api.weathermap') }}"></script>
+            {{-- <script src="{{ asset('ui/frontend/assets/js/weatherMap.js') }}" data-route="{{ route('api.weathermap') }}"></script> --}}
+            
             <script>
                 document.addEventListener("DOMContentLoaded", () => {
                     // city search form submission
@@ -113,19 +114,19 @@
                         .addEventListener("submit", (event) => {
                             event.preventDefault();
                             cityName = document.getElementById("cityNameMapInput").value;
-                            apiUrl = `https://api.weatherapi.com/v1/current.json?q=${cityName}`;
+                            apiKeyMap = 'd244580c4ef65da36df45a219910e1fd'
+                            apiUrl = `https://api.openweathermap.org/data/2.5/weather?appid=${apiKeyMap}&q=${cityName}`;
 
                             const data = {
                                 city: cityName,
                                 url: apiUrl,
                             };
-                            axios.post('{{ route('api.weathermap') }}', data)
+                            axios.get('{{ route('api.weathermap') }}', data)
                                 .then((response) => {
                                     // Handle successful response
-
                                     // if city found
                                     if (response.data.cod == 200) {
-                                        console.time("city found");
+                                        console.time("City Found");
                                         console.log("city name: ", response.data.name);
 
                                         document.getElementById(
@@ -141,6 +142,7 @@
                                             response.data.wind.speed * 3.6;
 
                                         let iconCode = response.data.weather[0].icon;
+                                        alert(response.data.name)
                                         let iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
                                         document
                                             .getElementById("weatherIconMap")
