@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    
+
 <x-frontend.layouts.partials.head />
 
 <body class="font-sans antialiased">
@@ -22,6 +22,8 @@
             {{ $slot }}
         </main>
     </div>
+    <x-frontend.layouts.partials.footer-script />
+
     @stack('script-links')
     @stack('scripts')
 </body>

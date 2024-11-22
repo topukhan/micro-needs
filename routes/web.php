@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\API\CountryController;
+use App\Http\Controllers\FormBuilder\FormBuilderController;
 use App\Http\Controllers\gatePolicy\PostController;
 use App\Http\Controllers\HashController;
 use App\Http\Controllers\HomeController;
@@ -65,7 +66,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/news-api', [ApiController::class, 'newsAPIIndex'])->name('api.news.index');
 
     Route::post('/weather-map', [ApiController::class, 'weatherMapApi'])->name('api.weathermap');
-    
+
     Route::get('/country-info', [CountryController::class, 'index'])->name('api.country.index');
     // End API
 
@@ -79,7 +80,11 @@ Route::middleware('auth')->group(function () {
     // Post for auth check (gate policy)
     Route::resource('/posts', PostController::class);
 
-
+    // form builder 
+    Route::get('/form-builder', [FormBuilderController::class, 'index'])->name('form.builder');
+    Route::post('/form-builder/preview', [FormBuilderController::class, 'preview'])->name('form.builder.preview');
+    Route::post('/form-builder/save', [FormBuilderController::class, 'store'])->name('form.builder.save');
+    Route::get('/render-form', [FormBuilderController::class, 'renderForm'])->name('form.render');
 });
 
 require __DIR__ . '/auth.php';

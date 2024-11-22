@@ -39,6 +39,16 @@
                     <a href="{{ route('posts.index') }}" class="bg-red-600 rounded py-2 px-3 text-white">
                         Gate Policy
                     </a>
+                   
+                    <!-- form builder  Button -->
+                    <a href="{{ route('form.builder') }}" class="bg-lime-600 rounded py-2 px-3 text-white">
+                        Form Builder
+                    </a>
+                   
+                    <!-- form builder  Button -->
+                    <a href="{{ route('form.render') }}" class="bg-slate-500 rounded py-2 px-3 text-white">
+                        Form Builder Render
+                    </a>
                     <!-- Add more buttons for additional features -->
 
                 </div>
