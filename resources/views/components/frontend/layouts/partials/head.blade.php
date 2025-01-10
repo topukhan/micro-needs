@@ -21,6 +21,9 @@
 
     <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/nprogress@0.2.0/nprogress.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/monokai-sublime.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
     <script>
         NProgress.configure({
             parent: '#pjax-container',

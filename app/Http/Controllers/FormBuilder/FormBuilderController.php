@@ -42,6 +42,49 @@ class FormBuilderController extends Controller
         return response()->json(['html' => $html], 200);
     }
 
+    public function generatePreview(Request $request)
+    {
+        $fields = $request->fields;
+        $html = '';
+
+        foreach ($fields as $field) {
+            switch ($field['type']) {
+                case 'text':
+                case 'email':
+                case 'password':
+                    $html .= "
+                        <div class='mb-4'>
+                            <label class='block text-sm font-medium text-gray-700'>{$field['label']}</label>
+                            <input type='{$field['type']}' name='{$field['name']}' class='w-full border-gray-300 rounded mt-1'>
+                        </div>";
+                    break;
+                case 'textarea':
+                    $html .= "
+                        <div class='mb-4'>
+                            <label class='block text-sm font-medium text-gray-700'>{$field['label']}</label>
+                            <textarea name='{$field['name']}' class='w-full border-gray-300 rounded mt-1'></textarea>
+                        </div>";
+                    break;
+                case 'radio':
+                    $html .= "
+                        <div class='mb-4'>
+                            <label class='block text-sm font-medium text-gray-700'>{$field['label']}</label>
+                            <input type='radio' name='{$field['name']}' class='mt-1'>
+                        </div>";
+                    break;
+                case 'file':
+                    $html .= "
+                        <div class='mb-4'>
+                            <label class='block text-sm font-medium text-gray-700'>{$field['label']}</label>
+                            <input type='file' name='{$field['name']}' class='w-full border-gray-300 rounded mt-1'>
+                        </div>";
+                    break;
+            }
+        }
+
+        return response($html);
+    }
+
 
     public function renderForm()
     {

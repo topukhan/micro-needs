@@ -85,6 +85,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/form-builder/preview', [FormBuilderController::class, 'preview'])->name('form.builder.preview');
     Route::post('/form-builder/save', [FormBuilderController::class, 'store'])->name('form.builder.save');
     Route::get('/render-form', [FormBuilderController::class, 'renderForm'])->name('form.render');
+    Route::post('/generate-preview', [FormBuilderController::class, 'generatePreview']);
 });
 
 require __DIR__ . '/auth.php';
