@@ -7,6 +7,7 @@ use App\Http\Controllers\gatePolicy\PostController;
 use App\Http\Controllers\HashController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Japanese\JapaneseController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PaymentGateway\SslCommerzPaymentController;
 use Illuminate\Support\Facades\Route;
@@ -86,6 +87,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/form-builder/save', [FormBuilderController::class, 'store'])->name('form.builder.save');
     Route::get('/render-form', [FormBuilderController::class, 'renderForm'])->name('form.render');
     Route::post('/generate-preview', [FormBuilderController::class, 'generatePreview']);
+
+    // stripe checkout route
+    Route::get('/checkout', [PaymentController::class, 'showCheckoutForm'])->name('stripe.checkout');
+    Route::post('/process-payment', [PaymentController::class, 'processPayment'])->name('payment.process');
+    Route::get('/payment-success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
 });
 
 require __DIR__ . '/auth.php';

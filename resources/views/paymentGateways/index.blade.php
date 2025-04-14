@@ -24,6 +24,10 @@
                     <a href="{{ route('gateway.sslcommerz.index') }}" class="bg-sky-600 rounded py-2 px-3 text-white">
                         SSL Commerzs
                     </a>
+                    
+                    <a href="{{ route('stripe.checkout') }}" class="bg-teal-600 rounded py-2 px-3 text-white">
+                        Stripe 
+                    </a>
 
 
                     <!-- Add more buttons for additional features -->
