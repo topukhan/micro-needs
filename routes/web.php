@@ -45,7 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/encrypt', [HashController::class, 'encrypt'])->name('hash.encrypt');
 
     // Japaneses
-    Route::resource('/japaneses', JapaneseController::class);
+    Route::resource('/crud', JapaneseController::class)->parameters(['crud' => 'japanese']);
 
     // SSLCOMMERZ Start
     Route::get('/example1', [SslCommerzPaymentController::class, 'exampleEasyCheckout'])->name('gateway.sslcommerz.index');

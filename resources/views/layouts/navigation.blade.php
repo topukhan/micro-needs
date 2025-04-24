@@ -16,8 +16,8 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     {{-- Japanese --}}
-                    <x-nav-link :href="route('japaneses.index')" :active="request()->routeIs('japaneses.index')">
-                        {{ __('Japaneses') }}
+                    <x-nav-link :href="route('crud.index')" :active="request()->routeIs('crud.index')">
+                        {{ __('CRUD') }}
                     </x-nav-link>
                     {{-- Payment Gateway --}}
                     <x-nav-link :href="route('paymentGateways')" :active="request()->routeIs('paymentGateways')">
@@ -91,8 +91,8 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
             {{-- Japanese --}}
-            <x-responsive-nav-link :href="route('japaneses.index')" :active="request()->routeIs('japaneses.index')">
-                {{ __('Japaneses') }}
+            <x-responsive-nav-link :href="route('crud.index')" :active="request()->routeIs('crud.index')">
+                {{ __('CRUD') }}
             </x-responsive-nav-link>
             {{-- payment gateway --}}
             <x-responsive-nav-link :href="route('paymentGateways')" :active="request()->routeIs('paymentGateways')">

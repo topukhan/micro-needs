@@ -53,7 +53,7 @@ class JapaneseController extends Controller
                 'note' => $request->note,
             ]);
             // dd($data);
-            return redirect()->route('japaneses.index')->withMessage('Translation Added');
+            return redirect()->route('crud.index')->withMessage('Translation Added');
         } catch (\Throwable $th) {
             return redirect()->back()->withInput()->withError($th);
         }
@@ -98,7 +98,7 @@ class JapaneseController extends Controller
                 'example' => $request->example,
                 'note' => $request->note,
             ]);
-            return redirect()->route('japaneses.index')->withMessage('Word Updated');
+            return redirect()->route('crud.index')->withMessage('Word Updated');
         } catch (\Throwable $th) {
             return redirect()->back()->withInput()->withError($th);
         }
@@ -110,6 +110,6 @@ class JapaneseController extends Controller
     public function destroy(Japanese $japanese)
     {
         $japanese->delete();
-        return redirect()->route('japaneses.index')->withMessage("Word Deleted!");
+        return redirect()->route('crud.index')->withMessage("Word Deleted!");
     }
 }

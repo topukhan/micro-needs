@@ -21,8 +21,8 @@
                     </a>
 
                     <!-- Simple Translator Button -->
-                    <a href="{{ route('japaneses.index') }}" class="bg-purple-600 rounded py-2 px-3 text-white">
-                        Japanese Words
+                    <a href="{{ route('crud.index') }}" class="bg-purple-600 rounded py-2 px-3 text-white">
+                        CRUD
                     </a>
 
                     <!--Payment Gateway  Button -->

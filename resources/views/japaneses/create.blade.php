@@ -1,13 +1,13 @@
 <x-frontend.layouts.master>
     <div class="max-w-2xl mx-auto mt-10 p-6 bg-white rounded shadow">
-        <h1 class="text-2xl font-bold mb-4">Translate Japanese Word</h1>
+        <h1 class="text-2xl font-bold mb-4">CRUD Operation</h1>
 
-        <form method="POST" action="{{ route('japaneses.store') }}" class="space-y-4">
+        <form method="POST" action="{{ route('crud.store') }}" class="space-y-4">
             @csrf
 
             <!-- Japanese Input -->
             <div>
-                <label for="japanese_word" class="block text-sm font-medium text-gray-700">Japanese</label>
+                <label for="japanese_word" class="block text-sm font-medium text-gray-700">English / Bangla</label>
                 <input type="text" name="japanese_word" id="japanese_word" value="{{ old('japanese_word') }}"
                     class="mt-1 p-2 w-full border rounded-md">
                 <x-input-error :messages="$errors->get('japanese_word')" class="mt-2" />
@@ -57,7 +57,7 @@
             <!-- Submit Button -->
             <div>
                 <!-- Back to List Link -->
-                <a href="{{ route('japaneses.index') }}"
+                <a href="{{ route('crud.index') }}"
                     class="bg-gradient-to-r from-sky-100 to-sky-500 text-gray-800 py-2 px-4 rounded-full shadow-2xl">
                     <i class="fas fa-arrow-left"></i> Back to List
                 </a>

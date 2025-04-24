@@ -16,7 +16,7 @@
                         Bkash Gateway
                     </a>
                     <!-- QR Code Button -->
-                    <a href="{{ route('japaneses.index') }}" class="bg-green-500 rounded py-2 px-3 text-white">
+                    <a href="{{ route('crud.index') }}" class="bg-green-500 rounded py-2 px-3 text-white">
                         Edokan Pay
                     </a>
 

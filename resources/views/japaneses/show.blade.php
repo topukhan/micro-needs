@@ -41,7 +41,7 @@
 
             <!-- Back to List Link -->
             <div class="mt-4 flex justify-center">
-                <a href="{{ route('japaneses.index') }}"
+                <a href="{{ route('crud.index') }}"
                     class="bg-gradient-to-r from-sky-100 to-sky-500 text-gray-800 py-2 px-4 rounded-full">
                     <i class="fas fa-arrow-left"></i> Back to List
                 </a>

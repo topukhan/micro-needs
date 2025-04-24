@@ -1,8 +1,8 @@
 <x-frontend.layouts.master>
     <div class="max-w-2xl mx-auto mt-10 p-6 bg-white rounded shadow">
-        <h1 class="text-2xl font-bold mb-4">Edit Japanese Word</h1>
+        <h1 class="text-2xl font-bold mb-4">Edit CRUD Word</h1>
 
-        <form method="POST" action="{{ route('japaneses.update', $japanese->id) }}" class="space-y-4">
+        <form method="POST" action="{{ route('crud.update', $japanese->id) }}" class="space-y-4">
             @csrf
             @method('PUT')
 
@@ -61,11 +61,11 @@
                 <button type="submit" class="px-4 py-2 mx-2 bg-gradient-to-l from-sky-600 to-sky-900 shadow-2xl text-white rounded-full">Update Entry</button>
             </div>
             <div class="mt-4 flex justify-between items-center px-3">
-                <a href="{{ route('japaneses.show', $japanese['id']) }}" class="text-blue-500 hover:underline">
+                <a href="{{ route('crud.show', $japanese['id']) }}" class="text-blue-500 hover:underline">
                     <i class="fas fa-info-circle"></i> View Details
                 </a>
     
-                <a href="{{ route('japaneses.index') }}" class="text-blue-500 hover:underline">
+                <a href="{{ route('crud.index') }}" class="text-blue-500 hover:underline">
                     <i class="fas fa-arrow-left"></i> Back to List
                 </a>
             </div>
