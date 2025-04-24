@@ -97,19 +97,7 @@
                             <h3 class="text-lg font-semibold text-gray-900 group-hover:text-white">Form Builder</h3>
                         </div>
                     </a>
-                    
-                    <!-- Form Builder Render Button -->
-                    <a href="{{ route('form.render') }}" class="group relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-500 to-slate-600 p-0.5 shadow-lg transition-all hover:shadow-slate-500/20 hover:scale-[1.02]">
-                        <div class="rounded-[10px] bg-white p-6 h-full flex flex-col items-center justify-center transition duration-300 group-hover:bg-opacity-0">
-                            <div class="rounded-full bg-slate-100 p-4 mb-4 text-slate-600 group-hover:text-white group-hover:bg-opacity-20">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-900 group-hover:text-white">Form Render</h3>
-                        </div>
-                    </a>
+
                 </div>
             </div>
         </div>

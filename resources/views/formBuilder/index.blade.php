@@ -1,82 +1,169 @@
-<x-frontend.layouts.master>
-    <div class="container mx-auto mt-6">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Form Builder -->
-            <div class="bg-white shadow-xl p-6 rounded">
-                <h1 class="text-lg font-bold mb-4">Form Builder</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Builder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .shadow-glow-blue {
+            box-shadow: 0 .5rem 1.5rem rgba(117, 166, 222, 0.5); /* Blue glow */
+        }
+    
+        .shadow-glow-red {
+            box-shadow: 0 .5rem 1.5rem rgba(238, 94, 94, 0.5); /* Red glow */
+        }
+    
+        .shadow-glow-green {
+            box-shadow: 0 .5rem 1.5rem rgba(65, 195, 100, 0.175); /* Green glow */
+            
+        }
+        @media (max-width: 768px) { /* Adjust width breakpoint if needed */
+    .table-responsive-md {
+        overflow-x: auto; /* Ensures horizontal scroll on overflow */
+        white-space: nowrap; /* Prevents table contents from wrapping */
+    }
+}
 
-                <div class="grid grid-cols-3 gap-4">
-                    <div>
-                        <label for="field_type" class="block text-sm font-medium text-gray-700">Field Type</label>
-                        <select id="field_type" class="w-full border-gray-300 rounded mt-1">
-                            <option value="text">Text</option>
-                            <option value="number">Number</option>
-                            <option value="email">Email</option>
-                            <option value="password">Password</option>
-                            <option value="textarea">Textarea</option>
-                            <option value="checkbox">Checkbox</option>
-                            <option value="radio">Radio</option>
-                            <option value="select">Select</option>
-                            <option value="date">Date</option>
-                            <option value="file">File</option>
-                            <option value="button">Button</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="field_name" class="block text-sm font-medium text-gray-700">Field Name</label>
-                        <input type="text" id="field_name" class="w-full border-gray-300 rounded mt-1"
-                            placeholder="e.g., username">
-                    </div>
-                    <div>
-                        <label for="field_label" class="block text-sm font-medium text-gray-700">Field Label</label>
-                        <input type="text" id="field_label" class="w-full border-gray-300 rounded mt-1"
-                            placeholder="e.g., Enter your name">
-                    </div>
-                </div>
+.animated-gradient {
+    background: linear-gradient(90deg, #0e1c23, #1b3a3a, #345b58, #4c7d75, #629b91);
+    background-size: 300% 300%;
+    animation: gradientAnimation 6s ease-in-out infinite;
+    color: white;
+    padding: 15px;
+}
 
-                <div id="options_container" class="mt-4 hidden">
-                    <label for="field_options" class="block text-sm font-medium text-gray-700">Options
-                        (comma-separated)</label>
-                    <input type="text" id="field_options" class="w-full border-gray-300 rounded mt-1"
-                        placeholder="e.g., Option 1, Option 2">
-                </div>
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
 
-                <div class="flex items-center gap-4 mt-4">
-                    <button id="add_field" class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded">Add
-                        Field</button>
+    </style>
+</head>
+<body>
+    <h2 class="text-center py-3 text-white animated-gradient" style="font-family: monospace;">
+        Form Builder (Bootstrap)
+        <a href="{{ route('dashboard') }}" class="fs-5 btn btn-outline-info">Home</a>
+    </h2>
+    <div class="container-fluid my-4">
+        <div class="row">
+            <!-- Left Section -->
+            <div class="col-md-2 offset-md-1 mt-2">
+                <!-- can i add glow effect in bootstrap for shadow with different color -->
+                <div class="card border-0 p-3 shadow-glow-green">
+                    <h5 class="mb-3">Field Selection</h5>
+                    <form id="fieldSelectionForm">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="text" id="fieldText">
+                            <label class="form-check-label" for="fieldText">Text</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="number" id="fieldNumber">
+                            <label class="form-check-label" for="fieldNumber">Number</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="email" id="fieldEmail">
+                            <label class="form-check-label" for="fieldEmail">Email</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="password" id="fieldPassword">
+                            <label class="form-check-label" for="fieldPassword">Password</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="textarea" id="fieldTextarea">
+                            <label class="form-check-label" for="fieldTextarea">Textarea</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="checkbox" id="fieldCheckbox">
+                            <label class="form-check-label" for="fieldCheckbox">Checkbox</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="radio" id="fieldRadio">
+                            <label class="form-check-label" for="fieldRadio">Radio</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="select" id="fieldSelect">
+                            <label class="form-check-label" for="fieldSelect">Select</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="date" id="fieldDate">
+                            <label class="form-check-label" for="fieldDate">Date</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="file" id="fieldFile">
+                            <label class="form-check-label" for="fieldFile">File</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="button" id="fieldButton">
+                            <label class="form-check-label" for="fieldButton">Button</label>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            <!-- Field List -->
-            <div class="bg-white p-4 rounded shadow-xl mt-4">
-                <p class="font-bold">Field List</p>
-                <div id="field_list"></div>
+    
+            <!-- Right Section -->
+            <div class="col-md-8 mt-2">
+                <div class="card border-0 p-3 shadow-glow-blue">
+                    <h5 class="mb-3">Field Options</h5>
+                    <div class="table-responsive-md">
+                        <table id="fieldOptionsTable" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Select Field Type</th>
+                                    <th>Enter Field Name</th>
+                                    <th>Enter Field Label</th>
+                                    <th>Enter Placeholder/Options</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="btn-section mt-2">
+                        <button id="showPreview" class="btn btn-success">Show Preview</button>
+                        <button id="addField" class="btn btn-dark">Add Field</button>
+                    </div>
+                </div>
             </div>
-
-            <!-- Preview Form -->
-            <div class="bg-white p-4 rounded shadow-xl mt-4">
-                <p class="font-bold">Preview Form</p>
-                <form id="preview_form">
-                    <!-- Dynamic form fields will be appended here -->
-                </form>
-            </div>
-        </div>
-
-        <!-- Generated HTML -->
-        <div class="bg-gray-100 p-4 rounded shadow mt-4">
-            <h2 class="text-lg font-bold">Generated Form HTML</h2>
-            <pre id="generated_html" class="bg-white p-4 rounded border mt-2 overflow-x-auto"></pre>
-            <pre><code class="html" id="codeSnippet"></code></pre>
-
-            <button id="copy_html" class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded mt-4">Copy
-                HTML</button>
+            
         </div>
     </div>
+    
+    
+    <!-- Modal for preview -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewModalLabel">Form Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Form preview content will go here -->
+            </div>
+            <div class="modal-footer">
+                <!-- Copy HTML button -->
+                <pre id="generated_html" class="bg-light p-3 rounded border overflow-auto d-none">No Field Selected</pre>
+                <button type="button" class="btn btn-success" id="copyHtml">Copy HTML</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-    {{-- @push('script-links')
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-html.min.js"></script>
-    @endpush --}}
-    @push('scripts')
-        <script src="{{ asset('ui/frontend/assets/js/formBuilderTailwind.js') }}"></script>
-    @endpush
-</x-frontend.layouts.master>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="{{ asset('ui/frontend/assets/js/formBuilder.js') }}"></script>
+</body>
+</html>
