@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\API\CountryController;
+use App\Http\Controllers\ApiSimulatorController;
 use App\Http\Controllers\FormBuilder\FormBuilderController;
 use App\Http\Controllers\gatePolicy\PostController;
 use App\Http\Controllers\HashController;
@@ -92,6 +93,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', [PaymentController::class, 'showCheckoutForm'])->name('stripe.checkout');
     Route::post('/process-payment', [PaymentController::class, 'processPayment'])->name('payment.process');
     Route::get('/payment-success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
+
+    Route::get('/api-simulator', [ApiSimulatorController::class, 'index'])->name('api.simulator');
+    Route::post('/api-simulator', [ApiSimulatorController::class, 'dispatchRequests'])->name('api.simulator.dispatch');
+    Route::get('/api/queue-status', [ApiSimulatorController::class, 'getQueueStatus'])->name('api.simulator.status');
 });
 
 require __DIR__ . '/auth.php';
