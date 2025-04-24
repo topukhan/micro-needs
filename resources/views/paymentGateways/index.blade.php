@@ -11,15 +11,6 @@
                 <h2 class="text-2xl font-semibold text-gray-900 mb-4">Different Gateways</h2>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-center">
-                    <!-- Hash Button -->
-                    <a href="{{ route('hash.index') }}" class="bg-blue-600 rounded py-2 px-3 text-white">
-                        Bkash Gateway
-                    </a>
-                    <!-- QR Code Button -->
-                    <a href="{{ route('crud.index') }}" class="bg-green-500 rounded py-2 px-3 text-white">
-                        Edokan Pay
-                    </a>
-
                     <!--SSL Commerzs  Button -->
                     <a href="{{ route('gateway.sslcommerz.index') }}" class="bg-sky-600 rounded py-2 px-3 text-white">
                         SSL Commerzs

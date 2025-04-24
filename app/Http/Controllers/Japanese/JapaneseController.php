@@ -14,8 +14,8 @@ class JapaneseController extends Controller
      */
     public function index()
     {
-        $words = Japanese::all();
-        return view('japaneses.index', compact('words'));
+        $words = Japanese::paginate();
+        return view('crud.index', compact('words'));
     }
 
     /**
@@ -23,7 +23,7 @@ class JapaneseController extends Controller
      */
     public function create()
     {
-        return view('japaneses.create');
+        return view('crud.create');
     }
 
     /**
@@ -46,7 +46,7 @@ class JapaneseController extends Controller
         // dd($request->all());
         try {
             $data = Japanese::create([
-                'japanese_word' => $request->japanese_word,
+                'japanese_word' => ucfirst($request->japanese_word),
                 'bangla_meaning' => $request->bangla_meaning,
                 'english_meaning' => $request->english_meaning,
                 'example' => $request->example,
@@ -64,7 +64,7 @@ class JapaneseController extends Controller
      */
     public function show(Japanese $japanese)
     {
-        return view('japaneses.show', compact('japanese'));
+        return view('crud.show', compact('japanese'));
     }
 
     /**
@@ -72,7 +72,7 @@ class JapaneseController extends Controller
      */
     public function edit(Japanese $japanese)
     {
-        return view('japaneses.edit', compact('japanese'));
+        return view('crud.edit', compact('japanese'));
     }
 
     /**
