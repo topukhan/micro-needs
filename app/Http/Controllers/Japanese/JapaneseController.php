@@ -32,13 +32,16 @@ class JapaneseController extends Controller
     public function store(Request $request)
     {
 
-        // dd($request->all());
         $validator = Validator::make($request->all(), [
-            'japanese_word' => 'required',
+            'japanese_word' => 'required|unique:japaneses,japanese_word',
             'example' => 'nullable|min:15',
             'note' => 'nullable|min:10',
             'bangla_meaning' => 'required_without:english_meaning',
             'english_meaning' => 'required_without:bangla_meaning',
+        ],
+        [
+            'japanese_word.required' => 'Japanese word is required',
+            'japanese_word.unique' => 'This word already exists',
         ]);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
@@ -81,7 +84,7 @@ class JapaneseController extends Controller
     public function update(Request $request, Japanese $japanese)
     {
         $validator = Validator::make($request->all(), [
-            'japanese_word' => 'required',
+            'japanese_word' => 'required|unique:japaneses,japanese_word,' . $japanese->id,
             'example' => 'nullable|min:15',
             'note' => 'nullable|min:10',
             'bangla_meaning' => 'required_without:english_meaning',
@@ -92,7 +95,7 @@ class JapaneseController extends Controller
         }
         try {
             $japanese->update([
-                'japanese_word' => $request->japanese_word,
+                'japanese_word' => ucfirst($request->japanese_word),
                 'bangla_meaning' => $request->bangla_meaning,
                 'english_meaning' => $request->english_meaning,
                 'example' => $request->example,

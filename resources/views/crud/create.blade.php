@@ -40,12 +40,10 @@
                 <div class="flex space-x-3">
                     <button type="button" onclick="toggleInput('bangla')"
                         class="flex-1 flex items-center justify-center px-4 py-3 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-600 text-white font-medium hover:from-teal-600 hover:to-cyan-700 transition-all shadow-md hover:shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z"
-                                clip-rule="evenodd" />
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="20" height="20">
+                            <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z"/>
+                            <text x="10" y="14" font-family="Noto Sans Bengali, Arial Unicode MS" font-size="8" text-anchor="middle" fill="currentColor">ব</text>
+                          </svg>
                         Bangla
                     </button>
                     <button type="button" onclick="toggleInput('english')"
@@ -62,7 +60,7 @@
             </div>
 
             <!-- Bangla Meaning Input -->
-            <div id="banglaInput" class="hidden space-y-2">
+            <div id="banglaInput" class=" space-y-2">
                 <label for="bangla_meaning" class="block text-sm font-medium text-gray-700">Bangla Meaning</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -73,7 +71,7 @@
                         </svg>
                     </div>
                     <input type="text" name="bangla_meaning" id="bangla_meaning" value="{{ old('bangla_meaning') }}"
-                        class="language-input pl-10 mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition duration-200 p-3 border">
+                        class="language-input pl-10 mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition duration-200 p-3 border" required>
                 </div>
                 <x-input-error :messages="$errors->get('bangla_meaning')" class="mt-1" />
             </div>
@@ -160,10 +158,14 @@
                     const otherField = document.getElementById(otherLanguage + 'Input');
 
                     inputField.classList.toggle('hidden');
+                    otherField.classList.add('hidden');
 
-                    // Optional: Close the other language field when one is opened
-                    if (!otherField.classList.contains('hidden')) {
-                        otherField.classList.add('hidden');
+                    if (!inputField.classList.contains('hidden')) {
+                        inputField.getElementsByTagName('input')[0].required = true;
+                        otherField.getElementsByTagName('input')[0].required = false;
+                    } else {
+                        inputField.getElementsByTagName('input')[0].required = false;
+                        otherField.getElementsByTagName('input')[0].required = true;
                     }
                 }
             </script>

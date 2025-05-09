@@ -1,63 +1,107 @@
 <x-frontend.layouts.master>
-    <div class="max-w-6xl mx-auto mt-10 p-6 bg-white rounded shadow">
-        <div class="py-12 px-4 mx-auto max-w-xl">
+    <div class="max-w-2xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <!-- Flash Messages -->
+        <div class="space-y-4 mb-6">
             @if (session('message'))
-                <div class="bg-blue-200 rounded-lg flex">
-                    <p class="text-sm px-4 py-3 font-bold">{{ session('message') }}</p>
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg shadow-sm">
+                    <div class="flex items-center">
+                        <svg class="h-5 w-5 text-blue-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p class="text-sm font-medium text-blue-800">{{ session('message') }}</p>
+                    </div>
                 </div>
             @endif
             @if (session('error'))
-                <div class="bg-red-200 rounded-lg flex">
-                    <p class="text-sm px-4 py-3 font-bold">{{ session('error') }}</p>
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow-sm">
+                    <div class="flex items-center">
+                        <svg class="h-5 w-5 text-red-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <p class="text-sm font-medium text-red-800">{{ session('error') }}</p>
+                    </div>
                 </div>
             @endif
-            {{-- <h1 class="text-3xl font-semibold mb-2">Welcome to Social App</h1> --}}
-            <div class="flex justify-between items-center mb-6 mt-3">
-                <div class="space-x-4">
-                    <!-- Button to create a post -->
-                    <a href="{{ route('posts.create') }}"
-                        class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow">Create
-                        Post</a>
+        </div>
 
-                </div>
-            </div>
-            <!-- Placeholder content for posts and notifications -->
-            <div class="bg-white rounded-lg shadow p-2 my-2">
-                <h2 class="text-xl font-semibold mb-4">Latest Posts</h2>
-            </div>
-            <!-- Example post -->
+        <!-- Header with Create Post Button -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl font-bold text-gray-900">Community Posts</h1>
+            <a href="{{ route('posts.create') }}" 
+               class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 border border-transparent rounded-md font-semibold text-white hover:from-blue-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-sm">
+                <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Create Post
+            </a>
+        </div>
+
+        <!-- Posts Section -->
+        <div class="space-y-6">
             @forelse ($posts as $post)
-            <div class="bg-white rounded-lg shadow-2xl shadow-rose-400 p-2 my-3">
-                <a href="{{ route('posts.show', $post) }}">
-                    {{-- <div class="mb-2 px-4"> --}}
-                        <p class="text-gray-600 py-4" title="click to view">
-                            <strong>{{ $post->user->name }}:</strong> <br>
-                            "{{ $post->content }}"
-                        </p>
+            <div class="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-200 hover:shadow-lg">
+                <div class="p-6">
+                    <!-- Post Header -->
+                    <div class="flex items-center mb-4">
+                        <div class="flex-shrink-0">
+                            <div class="h-10 w-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
+                                {{ substr($post->user->name, 0, 1) }}
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-medium text-gray-900">{{ $post->user->name }}</h3>
+                            <p class="text-sm text-gray-500">{{ $post->created_at->diffForHumans() }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Post Content -->
+                    <a href="{{ route('posts.show', $post) }}" class="block">
+                        <p class="text-gray-700 mb-4 whitespace-pre-line">{{ $post->content }}</p>
                     </a>
-                        <div class="flex items-center justify-between mx-2">
-                            <!-- Edit Icon -->
-                            <a href="{{ route('posts.edit', $post->id) }}" class="text-gray-600 hover:text-gray-900">
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M21.2799 6.40005L11.7399 15.94C10.7899 16.89 7.96987 17.33 7.33987 16.7C6.70987 16.07 7.13987 13.25 8.08987 12.3L17.6399 2.75002C17.8754 2.49308 18.1605 2.28654 18.4781 2.14284C18.7956 1.99914 19.139 1.92124 19.4875 1.9139C19.8359 1.90657 20.1823 1.96991 20.5056 2.10012C20.8289 2.23033 21.1225 2.42473 21.3686 2.67153C21.6147 2.91833 21.8083 3.21243 21.9376 3.53609C22.0669 3.85976 22.1294 4.20626 22.1211 4.55471C22.1128 4.90316 22.0339 5.24635 21.8894 5.5635C21.7448 5.88065 21.5375 6.16524 21.2799 6.40005V6.40005Z" stroke="#000000" stroke-width="1.176" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M11 4H6C4.93913 4 3.92178 4.42142 3.17163 5.17157C2.42149 5.92172 2 6.93913 2 8V18C2 19.0609 2.42149 20.0783 3.17163 20.8284C3.92178 21.5786 4.93913 22 6 22H17C19.21 22 20 20.2 20 18V13" stroke="#000000" stroke-width="1.176" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+
+                    <!-- Post Actions -->
+                    <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                        <div class="flex space-x-4">
+                            <!-- Edit Button -->
+                            <a href="{{ route('posts.edit', $post->id) }}" 
+                               class="inline-flex items-center text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors duration-200">
+                                <svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
                                 Edit
                             </a>
-                            <!-- Delete Icon -->
-                            <form action="{{ route('posts.destroy', $post->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" onclick="return confirm('Are you sure you want to delete?')" class="text-red-600 hover:text-red-900">
-                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#EF4444"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M10 11V17" stroke="#EF4444" stroke-width="0.9120000000000001" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M14 11V17" stroke="#EF4444" stroke-width="0.9120000000000001" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M4 7H20" stroke="#EF4444" stroke-width="0.9120000000000001" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6 7H12H18V18C18 19.6569 16.6569 21 15 21H9C7.34315 21 6 19.6569 6 18V7Z" stroke="#EF4444" stroke-width="0.9120000000000001" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="#EF4444" stroke-width="0.9120000000000001" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-                                    Delete
-                                </button>
-                            </form>
                         </div>
-                    {{-- </div> --}}
-                
+                        
+                        <!-- Delete Button -->
+                        <form action="{{ route('posts.destroy', $post->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" 
+                                    onclick="return confirm('Are you sure you want to delete this post?')"
+                                    class="inline-flex items-center text-sm font-medium text-gray-600 hover:text-red-600 transition-colors duration-200">
+                                <svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
             @empty
-                <div class="mt-2 flex space-x-4">
-                    No Post Available
+            <div class="bg-white rounded-xl shadow-md overflow-hidden p-8 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h3 class="mt-2 text-lg font-medium text-gray-900">No posts yet</h3>
+                <p class="mt-1 text-gray-500">Be the first to share something with the community!</p>
+                <div class="mt-6">
+                    <a href="{{ route('posts.create') }}" 
+                       class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 border border-transparent rounded-md font-semibold text-white hover:from-blue-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-sm">
+                        Create Your First Post
+                    </a>
                 </div>
+            </div>
             @endforelse
         </div>
     </div>
