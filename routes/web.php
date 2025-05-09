@@ -11,6 +11,8 @@ use App\Http\Controllers\Japanese\JapaneseController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PaymentGateway\SslCommerzPaymentController;
+use App\Http\Controllers\Redis\RedisWizardController;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -97,6 +99,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/api-simulator', [ApiSimulatorController::class, 'index'])->name('api.simulator');
     Route::post('/api-simulator', [ApiSimulatorController::class, 'dispatchRequests'])->name('api.simulator.dispatch');
     Route::get('/api/queue-status', [ApiSimulatorController::class, 'getQueueStatus'])->name('api.simulator.status');
+
+    // Redis Wizard Routes
+    Route::prefix('redis-wizard')->group(function () {
+        Route::get('/', [RedisWizardController::class, 'index'])->name('redis.wizard');
+        Route::post('/generate-command', [RedisWizardController::class, 'generateCommand']);
+        Route::post('/execute-command', [RedisWizardController::class, 'executeCommand']);
+    });
+    
 });
 
 require __DIR__ . '/auth.php';

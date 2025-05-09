@@ -109,6 +109,18 @@
                             <h3 class="text-lg font-semibold text-gray-900 group-hover:text-white">Queue</h3>
                         </div>
                     </a>
+
+                    {{--  add another card for redis wizard --}}
+                    <a href="{{ route('redis.wizard') }}" class="group relative overflow-hidden rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 p-0.5 shadow-lg transition-all hover:shadow-emerald-500/20 hover:scale-[1.02]">
+                        <div class="rounded-[10px] bg-white p-6 h-full flex flex-col items-center justify-center transition duration-300 group-hover:bg-opacity-0">
+                            <div class="rounded-full bg-emerald-100 p-4 mb-4 text-emerald-600 group-hover:text-white group-hover:bg-opacity-20">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m7 3H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 group-hover:text-white">Redis Wizard</h3>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
