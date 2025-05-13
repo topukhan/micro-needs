@@ -53,9 +53,11 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
+                        @can('viewAppSettings')
                         <x-dropdown-link :href="route('settings.index')">
                             {{ __('Settings') }}
                         </x-dropdown-link>
+                        @endcan
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
@@ -118,9 +120,11 @@
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
+                @can('viewAppSettings')
                 <x-responsive-nav-link :href="route('settings.index')">
                     {{ __('Settings') }}
                 </x-responsive-nav-link>
+                @endcan
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">

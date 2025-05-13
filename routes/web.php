@@ -108,8 +108,10 @@ Route::middleware('auth')->group(function () {
     });
 
     // Settings Routes
-    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
-    Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
+    Route::middleware('can:viewAppSettings')->group(function () {
+        Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
+    });
     
 });
 

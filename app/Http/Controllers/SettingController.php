@@ -6,6 +6,7 @@ use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate; // Add this line
 
 class SettingController extends Controller
 {
@@ -14,6 +15,7 @@ class SettingController extends Controller
      */
     public function index()
     {
+        Gate::authorize('viewAppSettings'); // Add this line
         $settings = Setting::all()->groupBy('tab_slug');
         $tabs = Setting::select('tab_slug', 'tab_display_name')->distinct()->get();
         return view('settings.index', compact('settings', 'tabs'));
@@ -24,6 +26,7 @@ class SettingController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::authorize('viewAppSettings'); // Add this line
         $inputSettings = $request->except('_token');
 
         foreach ($inputSettings as $key => $value) {
