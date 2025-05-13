@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class hashController extends Controller
+class HashController extends Controller
 {
     public function index(){
         $encrypted_data = null;

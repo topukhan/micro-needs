@@ -75,7 +75,7 @@ Route::middleware('auth')->group(function () {
     // End API
 
     // QR code 
-    Route::view('/qrcode', 'qrcode.index')->name('qrcode.index');
+    Route::view('/qrcode', 'qrCode.index')->name('qrcode.index');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
