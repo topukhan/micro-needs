@@ -12,7 +12,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PaymentGateway\SslCommerzPaymentController;
 use App\Http\Controllers\Redis\RedisWizardController;
-use Illuminate\Support\Facades\Redis;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -106,6 +106,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/generate-command', [RedisWizardController::class, 'generateCommand']);
         Route::post('/execute-command', [RedisWizardController::class, 'executeCommand']);
     });
+
+    // Settings Routes
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
     
 });
 
