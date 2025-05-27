@@ -2,15 +2,14 @@
 
 namespace App\Repositories\Interfaces;
 
+use App\Models\Article;
+use Illuminate\Contracts\Pagination\Paginator;
+
 interface ArticleRepositoryInterface
 {
-    public function getAllArticles();
-
-    public function getArticleById($id);
-
-    public function createArticle(array $data);
-
-    public function updateArticle($id, array $data);
-
-    public function deleteArticle($id);
+    public function getAllWithFilters(array $filters = [], int $perPage = 15): Paginator;
+    public function getArticleById(int $id): ?Article;
+    public function createArticle(array $data): Article;
+    public function updateArticle(int $id, array $data): Article;
+    public function deleteArticle(int $id): bool;
 }

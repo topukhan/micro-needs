@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\API\CountryController;
 use App\Http\Controllers\ApiSimulatorController;
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\FormBuilder\FormBuilderController;
 use App\Http\Controllers\gatePolicy\PostController;
 use App\Http\Controllers\HashController;
@@ -112,6 +113,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
     });
+    
+    Route::resource('/articles', ArticleController::class);
     
 });
 
