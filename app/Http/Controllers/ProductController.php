@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Picqer\Barcode\BarcodeGeneratorPNG;
 
 class ProductController extends Controller
 {
@@ -34,8 +36,7 @@ class ProductController extends Controller
 
         Product::create(array_merge($request->all(), ['barcode' => $barcode]));
 
-        return redirect()->route('products.index')
-            ->with('success', 'Product created successfully.');
+        return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
     private function generateUniqueBarcode()
@@ -47,10 +48,94 @@ class ProductController extends Controller
         return $barcode;
     }
 
-    // Display the specified product
+    private function updateBarcode(Product $product)
+    {
+        if ($product->barcode === null) {
+            $product->barcode = $this->generateUniqueBarcode();
+            $product->save();
+        }
+        return $product->barcode;
+    }
+
     public function show(Product $product)
     {
-        return view('product.show', compact('product'));
+        if (!$product) {
+            return to_route('products.index')->with('error', 'Product not found');
+        }
+
+        $product->barcode ?: $this->updateBarcode($product);
+
+        $barcodeImage = $this->generateBarcodeImage($product);
+
+        return view('product.show', compact('product', 'barcodeImage'));
+    }
+
+    public function generateBarcodeImage(Product $product)
+    {
+        try {
+            // Check GD extension
+            if (!extension_loaded('gd') || !function_exists('imagecreatefromstring')) {
+                throw new \RuntimeException('GD extension not available');
+            }
+
+            // Check barcode generator
+            if (!class_exists('Picqer\Barcode\BarcodeGeneratorPNG')) {
+                throw new \RuntimeException('Barcode generator package not installed');
+            }
+
+            // Validate barcode
+            if (empty($product->barcode) || !preg_match('/^[0-9]+$/', $product->barcode)) {
+                throw new \InvalidArgumentException('Invalid barcode format');
+            }
+
+            $generator = new BarcodeGeneratorPNG();
+            $barcodeData = $generator->getBarcode($product->barcode, $generator::TYPE_CODE_128);
+
+            if (empty($barcodeData)) {
+                throw new \RuntimeException('Barcode generation failed');
+            }
+
+            $barcodeImage = imagecreatefromstring($barcodeData);
+            if ($barcodeImage === false) {
+                throw new \RuntimeException('Failed to create image from barcode data');
+            }
+
+            $width = imagesx($barcodeImage);
+            $height = imagesy($barcodeImage);
+            $extraHeight = 20;
+            $finalImage = imagecreatetruecolor($width, $height + $extraHeight);
+
+            if ($finalImage === false) {
+                throw new \RuntimeException('Failed to create final image');
+            }
+
+            $white = imagecolorallocate($finalImage, 255, 255, 255);
+            imagefill($finalImage, 0, 0, $white);
+            imagecopy($finalImage, $barcodeImage, 0, 0, 0, 0, $width, $height);
+
+            $color = imagecolorallocate($finalImage, 0, 0, 0);
+            $font = 3;
+            $text = implode(' ', str_split($product->barcode));
+            $charWidth = imagefontwidth($font);
+            $textWidth = $charWidth * strlen($text);
+            $x = ($width - $textWidth) / 2;
+            $y = $height + 2;
+
+            imagestring($finalImage, $font, $x, $y, $text, $color);
+
+            ob_start();
+            $success = imagepng($finalImage);
+            $imageData = ob_get_clean();
+
+            if (!$success || empty($imageData)) {
+                throw new \RuntimeException('Failed to generate PNG image');
+            }
+
+            return base64_encode($imageData);
+        } catch (\Exception $e) {
+            Log::error('Barcode generation failed: ' . $e->getMessage());
+            return false;
+        }
     }
 
     // Show the form for editing the product

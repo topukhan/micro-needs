@@ -34,6 +34,10 @@
                         <span class="text-gray-400">No description provided</span>
                     @endif
                 </div>
+                <h5 class="text-lg font-bold text-gray-900 mt-4">Barcode</h5>
+                <div class="mt-2 text-sm text-gray-900">
+                    <img src="data:image/png;base64,{{ $barcodeImage }}">
+                </div>
             </div>
         </div>
         
