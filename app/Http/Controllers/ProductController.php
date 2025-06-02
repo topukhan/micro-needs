@@ -30,10 +30,21 @@ class ProductController extends Controller
             'quantity' => 'required|integer|min:0'
         ]);
 
-        Product::create($request->all());
+        $barcode = $this->generateUniqueBarcode();
+
+        Product::create(array_merge($request->all(), ['barcode' => $barcode]));
 
         return redirect()->route('products.index')
             ->with('success', 'Product created successfully.');
+    }
+
+    private function generateUniqueBarcode()
+    {
+        do {
+            $barcode = mt_rand(100000000000, 999999999999);
+        } while (Product::where('barcode', $barcode)->exists());
+
+        return $barcode;
     }
 
     // Display the specified product
