@@ -6,11 +6,8 @@ use App\Services\Hashing\HashingStrategyInterface;
 
 class HashingService
 {
-    private $hashingStrategy;
-
-    public function __construct(HashingStrategyInterface $hashingStrategy)
+    public function __construct(private HashingStrategyInterface $hashingStrategy)
     {
-        $this->hashingStrategy = $hashingStrategy;
     }
 
     public function hash(string $value): string

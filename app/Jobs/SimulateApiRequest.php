@@ -24,7 +24,7 @@ class SimulateApiRequest implements ShouldQueue
             Log::info("Processing job for request #{$this->requestId}"); // Log job start
 
             // Simulate API processing time
-            usleep(rand(500000, 1500000));
+            usleep(random_int(500000, 1500000));
 
             // Get existing logs array or create a new one
             $logs = cache()->get('request_logs', []);

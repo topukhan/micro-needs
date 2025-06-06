@@ -99,7 +99,7 @@ abstract class AbstractSslCommerz implements SslCommerzInterface
                     $response = json_encode(['status' => 'success', 'data' => $sslcz['GatewayPageURL'], 'logo' => $sslcz['storeLogo']]);
                 }
             } else {
-                if (strpos($sslcz['failedreason'],'Store Credential') === false) {
+                if (!str_contains($sslcz['failedreason'],'Store Credential')) {
                     $message = $sslcz['failedreason'];
                 } else {
                     $message = "Check the SSLCZ_TESTMODE and SSLCZ_STORE_PASSWORD value in your .env; DO NOT USE MERCHANT PANEL PASSWORD HERE.";

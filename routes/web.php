@@ -28,17 +28,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', fn() => view('welcome'));
 // payment gateway routes without controller
-Route::get('/payment-gateways', function () {
-    return view('paymentGateways.index');
-})->name('paymentGateways');
+Route::get('/payment-gateways', fn() => view('paymentGateways.index'))->name('paymentGateways');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', fn() => view('dashboard'))->middleware(['auth', 'verified'])->name('dashboard');
 
 // guest login route 
 Route::post('/guest/login', [HomeController::class, 'guestLogin'])->name('guest.login');

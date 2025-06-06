@@ -79,7 +79,7 @@ class ProductController extends Controller
             }
 
             // Check barcode generator
-            if (!class_exists('Picqer\Barcode\BarcodeGeneratorPNG')) {
+            if (!class_exists(\Picqer\Barcode\BarcodeGeneratorPNG::class)) {
                 throw new \RuntimeException('Barcode generator package not installed');
             }
 

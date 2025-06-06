@@ -56,7 +56,7 @@ class SettingController extends Controller
         $escapedOldValue = is_bool($oldValue) ? ($oldValue ? 'true' : 'false') : preg_quote($oldValue, '/');
 
 
-        if (strpos($content, $key . '=') !== false) {
+        if (str_contains($content, $key . '=')) {
             // Key exists, update it
             if ($value === null || $value === '') {
                  // If new value is null or empty, comment out or remove the line

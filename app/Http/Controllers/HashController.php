@@ -9,11 +9,8 @@ use Illuminate\Support\Facades\Log;
 
 class HashController extends Controller
 {
-    private $hashingService;
-
-    public function __construct(HashingService $hashingService)
+    public function __construct(private HashingService $hashingService)
     {
-        $this->hashingService = $hashingService;
     }
 
     public function index()
