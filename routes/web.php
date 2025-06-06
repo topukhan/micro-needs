@@ -12,6 +12,7 @@ use App\Http\Controllers\Japanese\JapaneseController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PaymentGateway\SslCommerzPaymentController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Redis\RedisWizardController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
@@ -115,6 +116,7 @@ Route::middleware('auth')->group(function () {
     });
     
     Route::resource('/articles', ArticleController::class);
+    Route::resource('/products', ProductController::class);
     
 });
 
