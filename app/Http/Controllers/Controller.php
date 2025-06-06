@@ -10,11 +10,12 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-    public function successResponse($data = [], $message = 'Success', $status = 200)
+    public function successResponse($message = 'Success', $redirect = null, $data = [], $status = 200)
     {
         return response()->json([
             'success' => true,
             'message' => $message,
+            'redirect' => $redirect,
             'data' => $data,
         ], $status);
     }

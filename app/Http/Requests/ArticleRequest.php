@@ -15,7 +15,7 @@ class ArticleRequest extends FormRequest
     public function rules(): array
     {
         $routeName = $this->route()->getName();
-        $articleId = $this->route('article'); // Assuming route model binding
+        $articleId = $this->route('article');
 
         return match(true) {
             // Force Delete Validation
@@ -37,10 +37,9 @@ class ArticleRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255', 'unique:articles,title'],
-            'slug' => ['required', 'string', 'max:255', 'unique:articles,slug'],
-            'content' => ['required', 'string', 'min:100'],
+            'content' => ['required', 'string', 'min:10'],
             'excerpt' => ['nullable', 'string', 'max:300'],
-            'featured_image' => ['nullable', 'image', 'max:2048'],
+            'featured_image' => ['required', 'image', 'max:2048'],
             'is_published' => ['sometimes', 'boolean'],
             'published_at' => ['nullable', 'date'],
             'meta_title' => ['nullable', 'string', 'max:255'],

@@ -17,23 +17,33 @@ class ArticleController extends Controller
     {
         try {
             $articles = $this->repository->getAllWithFilters($request->all());
-            return $this->successResponse($articles);
+            $categories = null;
+            // return $this->successResponse($articles);
+            return view('article.index', compact('articles', 'categories'));
         } catch (\Exception $e) {
             Log::error("Article index error: " . $e->getMessage());
             return $this->errorResponse("Server error", 500);
         }
     }
 
+    public function create()
+    {
+        return view('article.create');
+    }
+
     public function show(int $id)
     {
         $article = $this->repository->getArticleById($id);
-        return $this->successResponse($article);
+        $relatedArticles = $this->repository->getRelatedArticles($article, 5);
+
+        return view('article.show', compact('article', 'relatedArticles'));
+        // return $this->successResponse($article);
     }
 
     public function store(ArticleRequest $request)
     {
         $article = $this->repository->createArticle($request->validated());
-        return $this->successResponse($article, 201);
+        return $this->successResponse(message:'Article created successfully', redirect:route('articles.show', $article->id));
     }
 
     public function update(ArticleRequest $request, int $id)

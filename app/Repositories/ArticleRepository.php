@@ -27,18 +27,31 @@ class ArticleRepository implements ArticleInterface
                 new AuthorFilter($filters['author_id'] ?? null),
             ])
             ->thenReturn()
-            ->with('user')
+            ->with(['user', 'media'])
             ->paginate($perPage);
     }
 
     public function getArticleById(int $id): ?Article
     {
-        return $this->article->with('user')->findOrFail($id);
+        return $this->article->with(['user', 'media'])->findOrFail($id);
+    }
+
+    public function getRelatedArticles(Article $article, int $limit = 5)
+    {
+        if (!$article) {
+            throw new ModelNotFoundException("Article not found");
+        }
+
+        return $this->article->where('category_id', $article->category_id)
+            ->where('id', '!=', $article->id)
+            ->with(['user', 'media'])
+            ->limit($limit)
+            ->get();
     }
 
     public function createArticle(array $data): Article
     {
-        return $this->article->create($data);
+        return auth()->user()->articles()->create($data);
     }
 
     public function updateArticle($id, array $data): Article

@@ -3,7 +3,16 @@
         <!-- Header Section -->
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-gray-800">Vocabulary List</h1>
+                <div class="flex gap-2">
+                    <h1 class="text-3xl font-bold text-gray-800">Vocabulary List</h1>
+                    <a href="{{ route('articles.index') }}" 
+                       class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-teal-600 text-white font-medium rounded-lg hover:from-green-600 hover:to-teal-700 transition-all transform hover:scale-105 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9v-2h2v2zm0-4H9V5h2v4z" />
+                        </svg>
+                        Articles
+                    </a>
+                </div>
                 <p class="text-gray-600 mt-1">Manage your Japanese vocabulary collection</p>
             </div>
             <a href="{{ route('crud.create')}}" 

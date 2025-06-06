@@ -4,6 +4,8 @@
      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
       {{--  sweet alert --}}
  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ <script src="{{ asset('ui/frontend/assets/js/ajaxCall.js') }}"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
  <script>
     function toast(msg, type = 'success') {
