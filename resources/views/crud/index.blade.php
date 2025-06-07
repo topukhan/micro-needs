@@ -12,6 +12,13 @@
                         </svg>
                         Articles
                     </a>
+                    <a href="{{ route('products.index') }}" 
+                       class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-teal-300 to-sky-700 text-white font-medium rounded-lg hover:from-orange-500 hover:to-amber-800 transition-all transform hover:scale-105 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9v-2h2v2zm0-4H9V5h2v4z" />
+                        </svg>
+                        Products
+                    </a>
                 </div>
                 <p class="text-gray-600 mt-1">Manage your Japanese vocabulary collection</p>
             </div>

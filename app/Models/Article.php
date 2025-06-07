@@ -32,6 +32,12 @@ class Article extends Model implements HasMedia
         'published_at' => 'datetime',
         'view_count' => 'integer',
     ];
+
+    protected $attributes = [
+        'is_published' => false,
+        'view_count' => 0,
+    ];
+    
     protected $hidden = [
         'created_at',
         'updated_at',
