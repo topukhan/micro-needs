@@ -13,6 +13,7 @@ class PublishedFilter
         if ($this->isPublished !== null) {
             $query->where('is_published', $this->isPublished);
         }
+
         return $next($query);
     }
 }

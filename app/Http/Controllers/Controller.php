@@ -19,6 +19,7 @@ class Controller extends BaseController
             'data' => $data,
         ], $status);
     }
+
     public function errorResponse($message = 'Error', $status = 400)
     {
         return response()->json([
@@ -26,6 +27,7 @@ class Controller extends BaseController
             'message' => $message,
         ], $status);
     }
+
     public function notFoundResponse($message = 'Not Found', $status = 404)
     {
         return response()->json([
@@ -33,6 +35,7 @@ class Controller extends BaseController
             'message' => $message,
         ], $status);
     }
+
     public function validationErrorResponse($errors, $message = 'Validation Error', $status = 422)
     {
         return response()->json([
@@ -41,6 +44,7 @@ class Controller extends BaseController
             'errors' => $errors,
         ], $status);
     }
+
     public function failedResponse($message = 'Failed', $status = 500)
     {
         return response()->json([

@@ -32,15 +32,15 @@ class SimulateApiRequest implements ShouldQueue
             cache()->put('request_logs', $logs);
 
             // Increment processed count
-            $processedBefore = (int)cache()->get('processed_requests', 0);
+            $processedBefore = (int) cache()->get('processed_requests', 0);
             Log::info("Request #{$this->requestId}: Processed count BEFORE increment: {$processedBefore}"); // Log before increment
             cache()->put('processed_requests', $processedBefore + 1);
-            $processedAfter = (int)cache()->get('processed_requests', 0); // Re-fetch to confirm
+            $processedAfter = (int) cache()->get('processed_requests', 0); // Re-fetch to confirm
             Log::info("Request #{$this->requestId}: Processed count AFTER increment: {$processedAfter}"); // Log after increment
 
             // Rate limiting logic (every 3rd request)
             if ($this->requestId % 3 === 0) {
-                $rateLimited = (int)cache()->get('rate_limited_requests', 0);
+                $rateLimited = (int) cache()->get('rate_limited_requests', 0);
                 cache()->put('rate_limited_requests', $rateLimited + 1);
 
                 $logs = cache()->get('request_logs', []);
@@ -55,7 +55,7 @@ class SimulateApiRequest implements ShouldQueue
             }
         } catch (\Exception $e) {
             // Log any errors
-            Log::error("Job error for request #{$this->requestId}: " . $e->getMessage(), ['exception' => $e]); // Log exceptions
+            Log::error("Job error for request #{$this->requestId}: ".$e->getMessage(), ['exception' => $e]); // Log exceptions
         }
     }
 }

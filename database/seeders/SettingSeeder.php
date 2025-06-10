@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Setting;
+use Illuminate\Database\Seeder;
 
 class SettingSeeder extends Seeder
 {
@@ -22,7 +21,7 @@ class SettingSeeder extends Seeder
                 'field_value' => null,
                 'field_type' => 'text',
                 'placeholder' => 'Enter your Gemini API Key',
-                'hint' => 'Your API key for accessing Gemini services.'
+                'hint' => 'Your API key for accessing Gemini services.',
             ],
             [
                 'tab_slug' => 'stripe_keys',
@@ -32,7 +31,7 @@ class SettingSeeder extends Seeder
                 'field_value' => null,
                 'field_type' => 'text',
                 'placeholder' => 'Enter your Stripe Publishable Key (pk_...)',
-                'hint' => 'Your Stripe publishable API key.'
+                'hint' => 'Your Stripe publishable API key.',
             ],
             [
                 'tab_slug' => 'stripe_keys',
@@ -42,7 +41,7 @@ class SettingSeeder extends Seeder
                 'field_value' => null,
                 'field_type' => 'password',
                 'placeholder' => 'Enter your Stripe Secret Key (sk_...)',
-                'hint' => 'Your Stripe secret API key. Keep this confidential.'
+                'hint' => 'Your Stripe secret API key. Keep this confidential.',
             ],
         ];
 

@@ -10,9 +10,9 @@ use App\Http\Controllers\HashController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Japanese\JapaneseController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PaymentGateway\SslCommerzPaymentController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Redis\RedisWizardController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
@@ -28,17 +28,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', fn() => view('welcome'));
+Route::get('/', fn () => view('welcome'));
 // payment gateway routes without controller
-Route::get('/payment-gateways', fn() => view('paymentGateways.index'))->name('paymentGateways');
+Route::get('/payment-gateways', fn () => view('paymentGateways.index'))->name('paymentGateways');
 
-Route::get('/dashboard', fn() => view('dashboard'))->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', fn () => view('dashboard'))->middleware(['auth', 'verified'])->name('dashboard');
 
-// guest login route 
+// guest login route
 Route::post('/guest/login', [HomeController::class, 'guestLogin'])->name('guest.login');
 
 Route::middleware('auth')->group(function () {
-    //hashing
+    // hashing
     Route::get('/hash', [HashController::class, 'index'])->name('hash.index');
     Route::post('/decrypt', [HashController::class, 'decrypt'])->name('hash.decrypt');
     Route::post('/encrypt', [HashController::class, 'encrypt'])->name('hash.encrypt');
@@ -58,7 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel']);
 
     Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
-    //SSLCOMMERZ END
+    // SSLCOMMERZ END
 
     // API's
     Route::get('/web-api', [ApiController::class, 'apis'])->name('api.index');
@@ -70,7 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/country-info', [CountryController::class, 'index'])->name('api.country.index');
     // End API
 
-    // QR code 
+    // QR code
     Route::view('/qrcode', 'qrCode.index')->name('qrcode.index');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -80,7 +80,7 @@ Route::middleware('auth')->group(function () {
     // Post for auth check (gate policy)
     Route::resource('/posts', PostController::class);
 
-    // form builder 
+    // form builder
     Route::get('/form-builder', [FormBuilderController::class, 'index'])->name('form.builder');
     Route::post('/form-builder/preview', [FormBuilderController::class, 'preview'])->name('form.builder.preview');
     Route::post('/form-builder/save', [FormBuilderController::class, 'store'])->name('form.builder.save');
@@ -108,10 +108,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
     });
-    
+
     Route::resource('/articles', ArticleController::class);
     Route::resource('/products', ProductController::class);
-    
+
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

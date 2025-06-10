@@ -13,6 +13,7 @@ class AuthorFilter
         if ($this->authorId) {
             $query->where('user_id', $this->authorId);
         }
+
         return $next($query);
     }
 }

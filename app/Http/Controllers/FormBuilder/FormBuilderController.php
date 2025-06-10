@@ -26,7 +26,7 @@ class FormBuilderController extends Controller
 
         return response()->json(['message' => 'Field saved successfully!'], 200);
     }
-    
+
     public function preview(Request $request)
     {
         $fields = $request->fields; // Array of fields from AJAX
@@ -36,7 +36,7 @@ class FormBuilderController extends Controller
             $html .= "<div class='mb-4'>";
             $html .= "<label class='block text-sm font-medium text-gray-700'>{$field['field_label']}</label>";
             $html .= "<input type='{$field['field_type']}' name='{$field['field_name']}' class='w-full border-gray-300 rounded mt-1'>";
-            $html .= "</div>";
+            $html .= '</div>';
         }
 
         return response()->json(['html' => $html], 200);
@@ -85,10 +85,10 @@ class FormBuilderController extends Controller
         return response($html);
     }
 
-
     public function renderForm()
     {
         $fields = FormField::all();
+
         return view('formBuilder.render', compact('fields'));
     }
 }

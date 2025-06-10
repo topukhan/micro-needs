@@ -1,5 +1,7 @@
 <?php
+
 // app/Http/Controllers/ProductController.php
+
 namespace App\Http\Controllers;
 
 use App\Models\Product;
@@ -13,6 +15,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::latest()->paginate(10);
+
         return view('product.index', compact('products'));
     }
 
@@ -29,7 +32,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
-            'quantity' => 'required|integer|min:0'
+            'quantity' => 'required|integer|min:0',
         ]);
 
         $barcode = $this->generateUniqueBarcode();
@@ -54,12 +57,13 @@ class ProductController extends Controller
             $product->barcode = $this->generateUniqueBarcode();
             $product->save();
         }
+
         return $product->barcode;
     }
 
     public function show(Product $product)
     {
-        if (!$product) {
+        if (! $product) {
             return to_route('products.index')->with('error', 'Product not found');
         }
 
@@ -74,21 +78,21 @@ class ProductController extends Controller
     {
         try {
             // Check GD extension
-            if (!extension_loaded('gd') || !function_exists('imagecreatefromstring')) {
+            if (! extension_loaded('gd') || ! function_exists('imagecreatefromstring')) {
                 throw new \RuntimeException('GD extension not available');
             }
 
             // Check barcode generator
-            if (!class_exists(\Picqer\Barcode\BarcodeGeneratorPNG::class)) {
+            if (! class_exists(\Picqer\Barcode\BarcodeGeneratorPNG::class)) {
                 throw new \RuntimeException('Barcode generator package not installed');
             }
 
             // Validate barcode
-            if (empty($product->barcode) || !preg_match('/^[0-9]+$/', $product->barcode)) {
+            if (empty($product->barcode) || ! preg_match('/^[0-9]+$/', $product->barcode)) {
                 throw new \InvalidArgumentException('Invalid barcode format');
             }
 
-            $generator = new BarcodeGeneratorPNG();
+            $generator = new BarcodeGeneratorPNG;
             $barcodeData = $generator->getBarcode($product->barcode, $generator::TYPE_CODE_128);
 
             if (empty($barcodeData)) {
@@ -127,13 +131,14 @@ class ProductController extends Controller
             $success = imagepng($finalImage);
             $imageData = ob_get_clean();
 
-            if (!$success || empty($imageData)) {
+            if (! $success || empty($imageData)) {
                 throw new \RuntimeException('Failed to generate PNG image');
             }
 
             return base64_encode($imageData);
         } catch (\Exception $e) {
-            Log::error('Barcode generation failed: ' . $e->getMessage());
+            Log::error('Barcode generation failed: '.$e->getMessage());
+
             return false;
         }
     }
@@ -151,7 +156,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
-            'quantity' => 'required|integer|min:0'
+            'quantity' => 'required|integer|min:0',
         ]);
 
         $product->update($request->all());

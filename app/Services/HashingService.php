@@ -6,9 +6,7 @@ use App\Services\Hashing\HashingStrategyInterface;
 
 class HashingService
 {
-    public function __construct(private HashingStrategyInterface $hashingStrategy)
-    {
-    }
+    public function __construct(private HashingStrategyInterface $hashingStrategy) {}
 
     public function hash(string $value): string
     {

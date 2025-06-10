@@ -17,18 +17,18 @@ class ArticleRequest extends FormRequest
         $routeName = $this->route()->getName();
         $articleId = $this->route('article');
 
-        return match(true) {
+        return match (true) {
             // Force Delete Validation
             $routeName === 'articles.forceDelete' => [
-                'confirmation' => ['required', 'string', 'confirmed:delete']
+                'confirmation' => ['required', 'string', 'confirmed:delete'],
             ],
-            
+
             // Store (Create) Validation
             $this->isMethod('post') => $this->storeRules(),
-            
+
             // Update Validation
             $this->isMethod('put') => $this->updateRules($articleId),
-            
+
             default => []
         };
     }
@@ -43,7 +43,7 @@ class ArticleRequest extends FormRequest
             'is_published' => ['sometimes', 'boolean'],
             'published_at' => ['nullable', 'date'],
             'meta_title' => ['nullable', 'string', 'max:255'],
-            'meta_description' => ['nullable', 'string', 'max:160']
+            'meta_description' => ['nullable', 'string', 'max:160'],
         ];
     }
 
@@ -54,13 +54,13 @@ class ArticleRequest extends FormRequest
                 'sometimes',
                 'string',
                 'max:255',
-                Rule::unique('articles', 'title')->ignore($articleId)
+                Rule::unique('articles', 'title')->ignore($articleId),
             ],
             'slug' => [
                 'sometimes',
                 'string',
                 'max:255',
-                Rule::unique('articles', 'slug')->ignore($articleId)
+                Rule::unique('articles', 'slug')->ignore($articleId),
             ],
             'content' => ['sometimes', 'string', 'min:100'],
             // Include other fields same as storeRules() with 'sometimes'
@@ -72,7 +72,7 @@ class ArticleRequest extends FormRequest
         return [
             'confirmation.confirmed' => 'Confirmation text must match "delete"',
             'slug.unique' => 'This URL slug is already in use',
-            'content.min' => 'Content must be at least 100 characters'
+            'content.min' => 'Content must be at least 100 characters',
         ];
     }
 }

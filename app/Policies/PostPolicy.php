@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Post;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class PostPolicy
 {
@@ -39,7 +38,6 @@ class PostPolicy
     {
         return $user->id === $post->user_id;
     }
-
 
     /**
      * Determine whether the user can delete the model.

@@ -19,6 +19,7 @@ class DateRangeFilter
         if ($this->dateTo) {
             $query->whereDate('published_at', '<=', $this->dateTo);
         }
+
         return $next($query);
     }
 }

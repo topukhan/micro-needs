@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Jobs\SimulateApiRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ApiSimulatorController extends Controller
@@ -29,14 +29,14 @@ class ApiSimulatorController extends Controller
         return response()->json([
             'success' => true,
             'message' => "Dispatched {$count} API request jobs!",
-            'initial_pending' => $count
+            'initial_pending' => $count,
         ]);
     }
 
     public function getQueueStatus()
     {
-        $processed = (int)cache()->get('processed_requests', 0);
-        $rateLimited = (int)cache()->get('rate_limited_requests', 0);
+        $processed = (int) cache()->get('processed_requests', 0);
+        $rateLimited = (int) cache()->get('rate_limited_requests', 0);
         $pending = DB::table('jobs')->count();
         $logs = cache()->get('request_logs', []);
 
@@ -44,7 +44,7 @@ class ApiSimulatorController extends Controller
             'processed' => $processed,
             'rate_limited' => $rateLimited,
             'pending' => $pending,
-            'logs' => $logs
+            'logs' => $logs,
         ]);
     }
 }

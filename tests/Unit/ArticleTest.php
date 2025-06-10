@@ -12,7 +12,7 @@ class ArticleTest extends TestCase
      */
     public function test_default_values_are_set_correctly()
     {
-        $article = new Article();
+        $article = new Article;
 
         $this->assertFalse($article->is_published);          // boolean
         $this->assertEquals(0, $article->view_count);        // loose match
@@ -38,7 +38,7 @@ class ArticleTest extends TestCase
             'category_id' => 2,
         ];
 
-        $article = new Article();
+        $article = new Article;
 
         foreach ($data as $key => $value) {
             $this->assertEquals($value, $article->$key);

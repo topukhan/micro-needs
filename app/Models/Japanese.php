@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Japanese extends Model
 {
     protected $guarded = ['id'];
+
     use HasFactory;
 }

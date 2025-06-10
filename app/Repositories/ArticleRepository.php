@@ -38,8 +38,8 @@ class ArticleRepository implements ArticleInterface
 
     public function getRelatedArticles(Article $article, int $limit = 5)
     {
-        if (!$article) {
-            throw new ModelNotFoundException("Article not found");
+        if (! $article) {
+            throw new ModelNotFoundException('Article not found');
         }
 
         return $this->article->where('category_id', $article->category_id)
@@ -57,20 +57,21 @@ class ArticleRepository implements ArticleInterface
     public function updateArticle($id, array $data): Article
     {
         $article = $this->getArticleById($id);
-        if (!$article) {
-            throw new ModelNotFoundException("Article not found");
+        if (! $article) {
+            throw new ModelNotFoundException('Article not found');
         }
         $article->update($data);
+
         return $article;
     }
 
     public function deleteArticle($id): bool
     {
         $article = $this->getArticleById($id);
-        if (!$article) {
-            throw new ModelNotFoundException("Article not found");
+        if (! $article) {
+            throw new ModelNotFoundException('Article not found');
         }
-        
+
         return $article->forceDelete();
     }
 }

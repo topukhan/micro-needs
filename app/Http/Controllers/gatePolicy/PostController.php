@@ -15,6 +15,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::orderBy('created_at', 'desc')->get();
+
         return view('gatePolicy.index', compact('posts'));
     }
 
@@ -33,13 +34,14 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'content' => 'required|min:5'
+            'content' => 'required|min:5',
         ]);
         // dd($request->all());
         try {
             auth()->user()->posts()->create([
                 'content' => $request['content'],
             ]);
+
             return redirect()->route('posts.index')->with(['message' => 'Post Created Successfully']);
         } catch (\Throwable $th) {
             return redirect()->back()->with('error', $th->getMessage());
@@ -75,13 +77,14 @@ class PostController extends Controller
         $this->authorize('update', $post);
 
         $request->validate([
-            'content' => 'required|min:5'
+            'content' => 'required|min:5',
         ]);
         // dd($request->all());
         try {
             $post->update([
                 'content' => $request['content'],
             ]);
+
             return redirect()->route('posts.index')->with(['message' => 'Post Updated Successfully']);
         } catch (\Throwable $th) {
             return redirect()->back()->with('error', $th->getMessage());

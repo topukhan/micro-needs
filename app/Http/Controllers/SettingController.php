@@ -18,6 +18,7 @@ class SettingController extends Controller
         Gate::authorize('viewAppSettings'); // Add this line
         $settings = Setting::all()->groupBy('tab_slug');
         $tabs = Setting::select('tab_slug', 'tab_display_name')->distinct()->get();
+
         return view('settings.index', compact('settings', 'tabs'));
     }
 
@@ -55,11 +56,10 @@ class SettingController extends Controller
         $oldValue = env($key);
         $escapedOldValue = is_bool($oldValue) ? ($oldValue ? 'true' : 'false') : preg_quote($oldValue, '/');
 
-
-        if (str_contains($content, $key . '=')) {
+        if (str_contains($content, $key.'=')) {
             // Key exists, update it
             if ($value === null || $value === '') {
-                 // If new value is null or empty, comment out or remove the line
+                // If new value is null or empty, comment out or remove the line
                 $content = preg_replace(
                     "/^{$key}=.*$/m",
                     "#{$key}=",

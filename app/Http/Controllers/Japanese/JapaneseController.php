@@ -15,6 +15,7 @@ class JapaneseController extends Controller
     public function index()
     {
         $words = Japanese::paginate();
+
         return view('crud.index', compact('words'));
     }
 
@@ -39,10 +40,10 @@ class JapaneseController extends Controller
             'bangla_meaning' => 'required_without:english_meaning',
             'english_meaning' => 'required_without:bangla_meaning',
         ],
-        [
-            'japanese_word.required' => 'Japanese word is required',
-            'japanese_word.unique' => 'This word already exists',
-        ]);
+            [
+                'japanese_word.required' => 'Japanese word is required',
+                'japanese_word.unique' => 'This word already exists',
+            ]);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
         }
@@ -55,6 +56,7 @@ class JapaneseController extends Controller
                 'example' => $request->example,
                 'note' => $request->note,
             ]);
+
             // dd($data);
             return redirect()->route('crud.index')->withMessage('Translation Added');
         } catch (\Throwable $th) {
@@ -84,7 +86,7 @@ class JapaneseController extends Controller
     public function update(Request $request, Japanese $japanese)
     {
         $validator = Validator::make($request->all(), [
-            'japanese_word' => 'required|unique:japaneses,japanese_word,' . $japanese->id,
+            'japanese_word' => 'required|unique:japaneses,japanese_word,'.$japanese->id,
             'example' => 'nullable|min:15',
             'note' => 'nullable|min:10',
             'bangla_meaning' => 'required_without:english_meaning',
@@ -101,6 +103,7 @@ class JapaneseController extends Controller
                 'example' => $request->example,
                 'note' => $request->note,
             ]);
+
             return redirect()->route('crud.index')->withMessage('Word Updated');
         } catch (\Throwable $th) {
             return redirect()->back()->withInput()->withError($th);
@@ -113,6 +116,7 @@ class JapaneseController extends Controller
     public function destroy(Japanese $japanese)
     {
         $japanese->delete();
-        return redirect()->route('crud.index')->withMessage("Word Deleted!");
+
+        return redirect()->route('crud.index')->withMessage('Word Deleted!');
     }
 }

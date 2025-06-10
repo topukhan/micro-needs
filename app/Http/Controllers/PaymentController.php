@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Stripe\Stripe;
 use Stripe\PaymentIntent;
+use Stripe\Stripe;
 
 class PaymentController extends Controller
 {
@@ -60,7 +60,7 @@ class PaymentController extends Controller
     {
         $paymentIntentId = session('payment_intent_id');
 
-        if (!$paymentIntentId) {
+        if (! $paymentIntentId) {
             return redirect()->route('stripe.checkout')->with('error', 'No payment information found');
         }
 
@@ -69,7 +69,7 @@ class PaymentController extends Controller
         $paymentIntent = \Stripe\PaymentIntent::retrieve($paymentIntentId);
 
         return view('paymentGateways.stripe.success', [
-            'paymentIntent' => $paymentIntent
+            'paymentIntent' => $paymentIntent,
         ]);
     }
 }

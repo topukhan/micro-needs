@@ -11,8 +11,9 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Article extends Model implements HasMedia
 {
-    use InteractsWithMedia;
     use HasFactory, SoftDeletes;
+    use InteractsWithMedia;
+
     protected $fillable = [
         'title',
         'slug',
@@ -25,8 +26,9 @@ class Article extends Model implements HasMedia
         'category_id',
         'view_count',
         'meta_title',
-        'meta_description'
+        'meta_description',
     ];
+
     protected $casts = [
         'is_published' => 'boolean',
         'published_at' => 'datetime',
@@ -37,7 +39,7 @@ class Article extends Model implements HasMedia
         'is_published' => false,
         'view_count' => 0,
     ];
-    
+
     protected $hidden = [
         'created_at',
         'updated_at',
@@ -77,6 +79,7 @@ class Article extends Model implements HasMedia
     {
         $wordCount = str_word_count(strip_tags($this->content ?? ''));
         $readingTime = ceil($wordCount / $wordsPerMinute);
+
         return $readingTime;
     }
 

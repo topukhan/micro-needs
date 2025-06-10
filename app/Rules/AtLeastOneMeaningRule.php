@@ -16,10 +16,11 @@ class AtLeastOneMeaningRule implements ValidationRule
     {
         //
     }
+
     public function passes($attribute, $value)
     {
         // Access other fields using $this->otherFields
-        return !empty($value['bangla_meaning']) || !empty($value['english_meaning']);
+        return ! empty($value['bangla_meaning']) || ! empty($value['english_meaning']);
     }
 
     public function message()

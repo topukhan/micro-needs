@@ -28,6 +28,6 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::resource('post', PostPolicy::class);
 
-        Gate::define('viewAppSettings', fn(User $user) => $user->email === 'topukhan@gmail.com');
+        Gate::define('viewAppSettings', fn (User $user) => $user->email === 'topukhan@gmail.com');
     }
 }

@@ -3,19 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Services\HashingService;
-use App\Services\Hashing\BcryptHashingStrategy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class HashController extends Controller
 {
-    public function __construct(private HashingService $hashingService)
-    {
-    }
+    public function __construct(private HashingService $hashingService) {}
 
     public function index()
     {
         $encrypted_data = null;
+
         return view('hashView', compact('encrypted_data'));
     }
 
@@ -25,6 +23,7 @@ class HashController extends Controller
         $encrypted_data = $this->hashingService->hash($raw_data);
 
         Log::info('Encrypted data; ', ['data' => $encrypted_data]);
+
         return response()->json(['encrypted_data' => $encrypted_data]);
     }
 

@@ -9,14 +9,18 @@ use Illuminate\Support\Facades\Log;
 
 class ApiController extends Controller
 {
-    public function apis() {
+    public function apis()
+    {
         return view('apis.index');
     }
-    public function weatherAPIIndex() {
+
+    public function weatherAPIIndex()
+    {
         return view('apis.weather.index');
     }
-    
-    public function weatherMapApi(Request $request) {
+
+    public function weatherMapApi(Request $request)
+    {
         $cityName = $request->input('cityMapInput');
         log::info($cityName);
 
@@ -28,8 +32,9 @@ class ApiController extends Controller
         // Return the response from the OpenWeatherMap API
         return $response->json();
     }
-    
-    public function newsAPIIndex() {
+
+    public function newsAPIIndex()
+    {
         return view('apis.news.index');
     }
 }

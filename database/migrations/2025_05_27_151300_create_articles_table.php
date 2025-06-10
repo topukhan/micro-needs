@@ -24,7 +24,7 @@ return new class extends Migration
             $table->foreignId('category_id')->nullable();
             $table->unsignedBigInteger('view_count')->default(0);
             $table->string('meta_title')->nullable();
-            $table->text('meta_description')->nullable(); 
+            $table->text('meta_description')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

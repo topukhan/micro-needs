@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Services\Hashing\HashingStrategyInterface;
 use App\Services\Hashing\BcryptHashingStrategy;
+use App\Services\Hashing\HashingStrategyInterface;
 use Illuminate\Support\ServiceProvider;
 
 class HashingServiceProvider extends ServiceProvider
