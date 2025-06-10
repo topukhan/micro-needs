@@ -16,7 +16,7 @@ use Picqer\Barcode\BarcodeGeneratorPNG;
 class ProductController extends Controller
 {
     // Display a listing of products
-    public function index()
+    public function index(Request $request)
     {
         $products = app(Pipeline::class)
             ->send(Product::query())
@@ -28,8 +28,42 @@ class ProductController extends Controller
             ->thenReturn()
             ->paginate(10);
 
+             // Handle AJAX requests
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'html' => view('product.partials.product-list', compact('products'))->render(),
+                'pagination' => $products->appends($request->all())->links()->render(),
+                'total' => $products->total(),
+                'search_summary' => $this->getSearchSummary($request, $products->total())
+            ]);
+        }
 
         return view('product.index', compact('products'));
+    }
+
+
+    private function getSearchSummary(Request $request, $total)
+    {
+        $summary = '';
+        
+        if ($request->filled('search')) {
+            $summary .= 'Searching for "<strong>' . e($request->search) . '</strong>"';
+        }
+        
+        if ($request->filled('category')) {
+            $summary .= ($summary ? ' ' : '') . 'in category "<strong>' . 
+                       ucfirst(str_replace('-', ' ', $request->category)) . '</strong>"';
+        }
+        
+        if ($request->filled('sort')) {
+            $summary .= ($summary ? ' ' : '') . 'sorted by "<strong>' . 
+                       ucfirst(str_replace('_', ' ', $request->sort)) . '</strong>"';
+        }
+        
+        $summary .= ($summary ? ' - ' : '') . $total . ' result(s) found';
+        
+        return $summary;
     }
 
     // Show the form for creating a new product
