@@ -4,8 +4,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\Product\CategoryFilter;
+use App\Filters\Product\SearchFilter;
+use App\Filters\Product\SortFilter;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\Log;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 
@@ -14,7 +18,16 @@ class ProductController extends Controller
     // Display a listing of products
     public function index()
     {
-        $products = Product::latest()->paginate(10);
+        $products = app(Pipeline::class)
+            ->send(Product::query())
+            ->through([
+                SearchFilter::class,
+                CategoryFilter::class,
+                SortFilter::class,
+            ])
+            ->thenReturn()
+            ->paginate(10);
+
 
         return view('product.index', compact('products'));
     }
