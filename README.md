@@ -17,10 +17,10 @@ npm install
 npm run build
 ```
 
-To add a guest user, run:
+To add default data, run:
 
 ```
-php artisan db:seed --class=UserSeeder
+php artisan db:seed
 ```
 
 Finally, `php artisan serve` to run the project.
