@@ -170,6 +170,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\HashingServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
+        Laravel\Scout\ScoutServiceProvider::class,
     ])->toArray(),
 
     /*

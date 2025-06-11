@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $fillable = [
         'name',
@@ -16,4 +17,15 @@ class Product extends Model
         'quantity',
         'barcode',
     ];
+
+    public function toSearchableArray()
+    {
+        return array_merge($this->toArray(), [
+            'id' => (string) $this->id,
+            'name' => (string) $this->name,
+            'category' => (string) $this->category,
+            'brand' => (string) $this->brand,
+            'created_at' => $this->created_at->timestamp,
+        ]);
+    }
 }

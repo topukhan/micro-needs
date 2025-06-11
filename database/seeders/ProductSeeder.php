@@ -15,48 +15,46 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
         Product::truncate();
-        $limit = 50;
+        $limit = 200;
         $sortBy = 'price';
         $order = 'desc';
         $response = Http::get('https://dummyjson.com/products?limit=' . $limit.'&sortBy=' . $sortBy .'&order=' . $order);
         $apiProducts = $response->json();
         $products = $apiProducts['products'] ?? [];
 
-         $createdCount = 0;
-         $time = now();
+        $time = now();
+        $productData = [];
 
-         foreach ($products as $product) {
-            if ($createdCount >= $limit) {
+        foreach ($products as $product) {
+            if (count($productData) >= $limit) {
                 break;
             }
-            $images = json_encode($product['images'] ?? []);
-            $tags = json_encode($product['tags'] ?? []);
-            // dd($images, $tags, gettype($images));
-            Product::create([
+
+            $productData[] = [
                 'name' => $product['title'] ?? 'No name',
                 'barcode' => $this->generateUniqueBarcode(),
                 'thumbnail' => $product['thumbnail'] ?? null,
-                'images' => $images ?? null,
+                'images' => json_encode($product['images'] ?? []),
                 'category' => $product['category'] ?? null,
                 'brand' => $product['brand'] ?? null,
                 'warrantyInformation' => $product['warrantyInformation'] ?? null,
                 'availabilityStatus' => $product['availabilityStatus'] ?? null,
                 'rating' => $product['rating'] ?? 0,
-                'tags' => $tags ?? null,
+                'tags' => json_encode($product['tags'] ?? []),
                 'price' => $product['price'] ?? 0,
                 'description' => $product['description'] ?? '',
                 'quantity' => $product['stock'] ?? 0,
                 'created_at' => $time,
                 'updated_at' => $time,
-            ]);
-            
-            $createdCount++;
+            ];
         }
 
+        // Insert all products in a single query
+        Product::insert($productData);
     }
 
     private function generateUniqueBarcode()
     {
-        return mt_rand(100000000000, 999999999999);
+        return mt_rand(10000000, 99999999);
     }
 }

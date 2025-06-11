@@ -10,12 +10,14 @@
         "laravel/cashier": "15.6",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
+        "laravel/scout": "^10.15",
         "laravel/tinker": "^2.8",
         "opcodesio/log-viewer": "^3.15",
         "picqer/php-barcode-generator": "^3.2",
         "predis/predis": "^3.0",
         "spatie/laravel-medialibrary": "^11.13",
-        "stripe/stripe-php": "16.2"
+        "stripe/stripe-php": "16.2",
+        "typesense/typesense-php": "^4.9"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",

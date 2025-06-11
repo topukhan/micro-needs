@@ -1,7 +1,9 @@
 <x-frontend.layouts.master>
     <div class="bg-white shadow rounded-lg overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 flex justify-between">
-            <h2 class="text-2xl font-semibold text-gray-800">Product List</h2>
+            <h2 class="text-2xl font-semibold text-gray-800">
+                Product List <a class="text-blue-600" href="https://cloud.typesense.org/" target="_blank">(Typesense Implemented)</a>
+            </h2>
             <a href="{{ route('products.create') }}"
                 class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -112,37 +114,137 @@
         </div>
     </div>
 
-    <script>
+</x-frontend.layouts.master>
+<script>
     $(document).ready(function() {
-        let searchTimeout;
-        const searchInput = $('#searchInput');
-        const categorySelect = $('#categorySelect');
-        const sortSelect = $('#sortSelect');
-        const clearButton = $('#clearFilters');
-        const searchSummary = $('#searchSummary');
-        const loadingIndicator = $('#loadingIndicator');
-        const productsContainer = $('#productsContainer');
-        const paginationContainer = $('#paginationContainer');
+    let searchTimeout;
+    const searchInput = $('#searchInput');
+    const categorySelect = $('#categorySelect');
+    const sortSelect = $('#sortSelect');
+    const clearButton = $('#clearFilters');
+    const searchSummary = $('#searchSummary');
+    const loadingIndicator = $('#loadingIndicator');
+    const productsContainer = $('#productsContainer');
+    const paginationContainer = $('#paginationContainer');
 
-        // Debounced search function
-        function debounceSearch() {
-            clearTimeout(searchTimeout);
-            loadingIndicator.show();
-            searchTimeout = setTimeout(function() {
-                performSearch();
-            }, 500);
-        }
+    // Debounced search function
+    function debounceSearch() {
+        clearTimeout(searchTimeout);
+        loadingIndicator.show();
+        searchTimeout = setTimeout(function() {
+            performSearch();
+        }, 50);
+    }
 
-        // Immediate search for filters
-        function performSearch() {
+    // Immediate search for filters
+    function performSearch() {
+        const params = new URLSearchParams();
+        if (searchInput.val()) params.append('search', searchInput.val());
+        if (categorySelect.val()) params.append('category', categorySelect.val());
+        if (sortSelect.val()) params.append('sort', sortSelect.val());
+
+        $.ajax({
+            url: `{{ route('products.index') }}?${params.toString()}`,
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data) {
+                if (data.success) {
+                    productsContainer.html(data.html);
+                    paginationContainer.html(data.pagination);
+                    
+                    // Update search summary
+                    if (data.search_summary) {
+                        searchSummary.html(data.search_summary).show();
+                    } else {
+                        searchSummary.hide();
+                    }
+                    
+                    // Show/hide clear button
+                    updateClearButton();
+                    
+                    // Update URL without page reload
+                    updateURL();
+                    
+                    // Re-attach delete confirmation listeners
+                    attachDeleteListeners();
+                }
+            },
+            error: function(error) {
+                console.error('Search error:', error);
+                // Show error message
+                const errorDiv = $('<div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4"><p>An error occurred while searching. Please try again.</p></div>');
+                productsContainer.prepend(errorDiv);
+                setTimeout(() => errorDiv.remove(), 5000);
+            },
+            complete: function() {
+                loadingIndicator.hide();
+            }
+        });
+    }
+
+    // Update URL parameters
+    function updateURL() {
+        const params = new URLSearchParams();
+        if (searchInput.val()) params.set('search', searchInput.val());
+        if (categorySelect.val()) params.set('category', categorySelect.val());
+        if (sortSelect.val()) params.set('sort', sortSelect.val());
+        
+        const newURL = params.toString() ? 
+            `${window.location.pathname}?${params.toString()}` : 
+            window.location.pathname;
+        
+        window.history.pushState({}, '', newURL);
+    }
+
+    // Update clear button visibility
+    function updateClearButton() {
+        const hasFilters = searchInput.val() || categorySelect.val() || sortSelect.val();
+        clearButton.css('display', hasFilters ? 'block' : 'none');
+    }
+
+    // Attach delete confirmation listeners
+    function attachDeleteListeners() {
+        $('.delete-product').on('click', function(e) {
+            if (!confirm('Are you sure you want to delete this product?')) {
+                e.preventDefault();
+            }
+        });
+    }
+
+    // Event listeners
+    searchInput.on('input', debounceSearch);
+    categorySelect.on('change', performSearch);
+    sortSelect.on('change', performSearch);
+
+    // Clear filters
+    clearButton.on('click', function() {
+        searchInput.val('');
+        categorySelect.val('');
+        sortSelect.val('');
+        performSearch();
+    });
+
+    // Handle pagination clicks
+    $(document).on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        const url = new URL($(this).attr('href'));
+        const page = url.searchParams.get('page');
+        
+        if (page) {
             const params = new URLSearchParams();
             if (searchInput.val()) params.append('search', searchInput.val());
             if (categorySelect.val()) params.append('category', categorySelect.val());
             if (sortSelect.val()) params.append('sort', sortSelect.val());
+            params.append('page', page);
 
+            loadingIndicator.show();
+            
             $.ajax({
                 url: `{{ route('products.index') }}?${params.toString()}`,
-                method: 'GET',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
                     'Accept': 'application/json',
@@ -153,132 +255,32 @@
                         productsContainer.html(data.html);
                         paginationContainer.html(data.pagination);
                         
-                        // Update search summary
-                        if (data.search_summary) {
-                            searchSummary.html(data.search_summary).show();
-                        } else {
-                            searchSummary.hide();
-                        }
+                        // Update URL
+                        window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
                         
-                        // Show/hide clear button
-                        updateClearButton();
+                        // Scroll to top of products
+                        $('html, body').animate({
+                            scrollTop: productsContainer.offset().top
+                        }, 'smooth');
                         
-                        // Update URL without page reload
-                        updateURL();
-                        
-                        // Re-attach delete confirmation listeners
+                        // Re-attach delete listeners
                         attachDeleteListeners();
                     }
-                },
-                error: function(error) {
-                    console.error('Search error:', error);
-                    // Show error message
-                    const errorDiv = $('<div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4"><p>An error occurred while searching. Please try again.</p></div>');
-                    productsContainer.prepend(errorDiv);
-                    setTimeout(() => errorDiv.remove(), 5000);
                 },
                 complete: function() {
                     loadingIndicator.hide();
                 }
             });
         }
-
-        // Update URL parameters
-        function updateURL() {
-            const params = new URLSearchParams();
-            if (searchInput.val()) params.set('search', searchInput.val());
-            if (categorySelect.val()) params.set('category', categorySelect.val());
-            if (sortSelect.val()) params.set('sort', sortSelect.val());
-            
-            const newURL = params.toString() ? 
-                `${window.location.pathname}?${params.toString()}` : 
-                window.location.pathname;
-            
-            window.history.pushState({}, '', newURL);
-        }
-
-        // Update clear button visibility
-        function updateClearButton() {
-            const hasFilters = searchInput.val() || categorySelect.val() || sortSelect.val();
-            clearButton.css('display', hasFilters ? 'block' : 'none');
-        }
-
-        // Attach delete confirmation listeners
-        function attachDeleteListeners() {
-            $('.delete-product').on('click', function(e) {
-                if (!confirm('Are you sure you want to delete this product?')) {
-                    e.preventDefault();
-                }
-            });
-        }
-
-        // Event listeners
-        searchInput.on('input', debounceSearch);
-        categorySelect.on('change', performSearch);
-        sortSelect.on('change', performSearch);
-
-        // Clear filters
-        clearButton.on('click', function() {
-            searchInput.val('');
-            categorySelect.val('');
-            sortSelect.val('');
-            performSearch();
-        });
-
-        // Handle pagination clicks
-        $(document).on('click', '.pagination a', function(e) {
-            e.preventDefault();
-            const url = new URL($(this).attr('href'));
-            const page = url.searchParams.get('page');
-            
-            if (page) {
-                const params = new URLSearchParams();
-                if (searchInput.val()) params.append('search', searchInput.val());
-                if (categorySelect.val()) params.append('category', categorySelect.val());
-                if (sortSelect.val()) params.append('sort', sortSelect.val());
-                params.append('page', page);
-
-                loadingIndicator.show();
-                
-                $.ajax({
-                    url: `{{ route('products.index') }}?${params.toString()}`,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(data) {
-                        if (data.success) {
-                            productsContainer.html(data.html);
-                            paginationContainer.html(data.pagination);
-                            
-                            // Update URL
-                            window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
-                            
-                            // Scroll to top of products
-                            $('html, body').animate({
-                                scrollTop: productsContainer.offset().top
-                            }, 'smooth');
-                            
-                            // Re-attach delete listeners
-                            attachDeleteListeners();
-                        }
-                    },
-                    complete: function() {
-                        loadingIndicator.hide();
-                    }
-                });
-            }
-        });
-
-        // Initial state
-        updateClearButton();
-        attachDeleteListeners();
-        
-        // Show search summary if filters are applied
-        if (searchInput.val() || categorySelect.val() || sortSelect.val()) {
-            searchSummary.show();
-        }
     });
+
+    // Initial state
+    updateClearButton();
+    attachDeleteListeners();
+    
+    // Show search summary if filters are applied
+    if (searchInput.val() || categorySelect.val() || sortSelect.val()) {
+        searchSummary.show();
+    }
+});
 </script>
-</x-frontend.layouts.master>
