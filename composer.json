@@ -17,6 +17,7 @@
         "predis/predis": "^3.0",
         "spatie/laravel-medialibrary": "^11.13",
         "stripe/stripe-php": "16.2",
+        "topukhan/geokit": "^1.0",
         "typesense/typesense-php": "^4.9"
     },
     "require-dev": {
@@ -72,6 +73,6 @@
             "php-http/discovery": true
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }

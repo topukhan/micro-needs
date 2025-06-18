@@ -14,8 +14,10 @@ use App\Http\Controllers\PaymentGateway\SslCommerzPaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Redis\RedisWizardController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
+use Topukhan\Geokit\Facades\Geokit;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,11 +30,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', fn () => view('welcome'));
+Route::get('/', fn() => view('welcome'));
 // payment gateway routes without controller
-Route::get('/payment-gateways', fn () => view('paymentGateways.index'))->name('paymentGateways');
+Route::get('/payment-gateways', fn() => view('paymentGateways.index'))->name('paymentGateways');
 
-Route::get('/dashboard', fn () => view('dashboard'))->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', fn() => view('dashboard'))->middleware(['auth', 'verified'])->name('dashboard');
 
 // guest login route
 Route::post('/guest/login', [HomeController::class, 'guestLogin'])->name('guest.login');
@@ -112,6 +114,27 @@ Route::middleware('auth')->group(function () {
     Route::resource('/articles', ArticleController::class);
     Route::resource('/products', ProductController::class);
 
+    // Search address
+    Route::resource('/search-address', SearchController::class)->only(['create', 'store']);
+    Route::get('/search-address/search', [SearchController::class, 'search'])->name('search-address.search');
+    Route::post('/search-address/add-to-cache', [SearchController::class, 'addToCache'])->name('search-address.add-to-cache');
+    Route::post('/search-address/remove-from-cache', [SearchController::class, 'removeFromCache'])->name('search-address.remove-from-cache');
+    Route::post('/search-address/clear-cache', [SearchController::class, 'clearCache'])->name('search-address.clear-cache');
+    Route::get('/search-address/get-cached', [SearchController::class, 'getCached'])->name('search-address.get-cached');
+
 });
 
-require __DIR__.'/auth.php';
+Route::get('/test-geokit', function () {
+    $param = request('search');
+    $response = Geokit::search($param);
+
+    return [
+        'query' => $response->query,
+        'results_count' => $response->count(),
+        'used_fallback' => $response->usedFallback,
+        'failed_providers' => $response->failedProviders,
+        'results' => $response->toArray()['results']
+    ];
+});
+
+require __DIR__ . '/auth.php';

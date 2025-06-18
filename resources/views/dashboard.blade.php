@@ -67,7 +67,7 @@
                         <div class="rounded-[10px] bg-white p-6 h-full flex flex-col items-center justify-center transition duration-300 group-hover:bg-opacity-0">
                             <div class="rounded-full bg-amber-100 p-4 mb-4 text-amber-600 group-hover:text-white group-hover:bg-opacity-20">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                                 </svg>
                             </div>
                             <h3 class="text-lg font-semibold text-gray-900 group-hover:text-white">Web API's</h3>
@@ -103,24 +103,41 @@
                         <div class="rounded-[10px] bg-white p-6 h-full flex flex-col items-center justify-center transition duration-300 group-hover:bg-opacity-0">
                             <div class="rounded-full bg-sky-100 p-4 mb-4 text-sky-600 group-hover:text-white group-hover:bg-opacity-20">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 4v16M12 4v16M18 4v16" />
                                 </svg>
                             </div>
                             <h3 class="text-lg font-semibold text-gray-900 group-hover:text-white">Queue</h3>
                         </div>
                     </a>
 
-                    {{--  add another card for redis wizard --}}
+                    <!-- Redis Wizard Button -->
                     <a href="{{ route('redis.wizard') }}" class="group relative overflow-hidden rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 p-0.5 shadow-lg transition-all hover:shadow-emerald-500/20 hover:scale-[1.02]">
                         <div class="rounded-[10px] bg-white p-6 h-full flex flex-col items-center justify-center transition duration-300 group-hover:bg-opacity-0">
                             <div class="rounded-full bg-emerald-100 p-4 mb-4 text-emerald-600 group-hover:text-white group-hover:bg-opacity-20">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m7 3H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
                                 </svg>
                             </div>
                             <h3 class="text-lg font-semibold text-gray-900 group-hover:text-white">Redis Wizard</h3>
                         </div>
                     </a>
+
+                    <!-- Address Search Button -->
+                    <a href="{{ route('search-address.create') }}" class="group relative overflow-hidden rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 p-0.5 shadow-lg transition-all hover:shadow-purple-500/20 hover:scale-[1.02]">
+                        <div class="rounded-[10px] bg-white p-6 h-full flex flex-col items-center justify-center transition duration-300 group-hover:bg-opacity-0">
+                            <div class="rounded-full bg-purple-100 p-4 mb-4 text-purple-600 group-hover:text-white group-hover:bg-opacity-20">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 group-hover:text-white">Search Address</h3>
+                        </div>
+                    </a>
+
+
+
+                    <!-- Add new button -->
                 </div>
             </div>
         </div>
