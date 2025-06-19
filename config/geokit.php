@@ -31,7 +31,7 @@ return [
     */
     'api_keys' => [
         'geoapify' => env('GEOKIT_GEOAPIFY_KEY', 'f763735f7266423ba51899a18e34efcb'),
-        'locationiq'=> env('GEOKIT_LOCATIONIQ_KEY','pk.129943496f1af64462174442090bb50a'),
+        'locationiq' => env('GEOKIT_LOCATIONIQ_KEY', 'pk.129943496f1af64462174442090bb50a'),
     ],
 
     /*

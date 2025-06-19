@@ -17,7 +17,7 @@ class ProductSeeder extends Seeder
         $limit = 200;
         $sortBy = 'price';
         $order = 'desc';
-        $response = Http::get('https://dummyjson.com/products?limit=' . $limit.'&sortBy=' . $sortBy .'&order=' . $order);
+        $response = Http::get('https://dummyjson.com/products?limit='.$limit.'&sortBy='.$sortBy.'&order='.$order);
         $apiProducts = $response->json();
         $products = $apiProducts['products'] ?? [];
 

@@ -11,6 +11,7 @@ class SearchFilter
     {
         //
     }
+
     public function handle($request, Closure $next)
     {
         $query = $next($request);

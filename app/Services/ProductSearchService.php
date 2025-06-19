@@ -10,6 +10,7 @@ class ProductSearchService
     {
         if (config('scout.driver') === 'typesense') {
             $results = Product::search($query)->get();
+
             return $results->pluck('id')->toArray();
         }
 

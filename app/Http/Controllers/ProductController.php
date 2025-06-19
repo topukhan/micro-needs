@@ -10,6 +10,7 @@ use App\Filters\Product\SortFilter;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 
@@ -18,51 +19,58 @@ class ProductController extends Controller
     // Display a listing of products
     public function index(Request $request)
     {
-        $products = app(Pipeline::class)
-            ->send(Product::query())
-            ->through([
-                SearchFilter::class,
-                CategoryFilter::class,
-                SortFilter::class,
-            ])
-            ->thenReturn()
-            ->paginate(10);
+        $cacheKey = 'products_'.md5(json_encode($request->all()));
+        $fromCache = Cache::has($cacheKey);
+        $products = Cache::remember($cacheKey, now()->addMinutes(60), function () {
+            $fromCache = false;
 
-             // Handle AJAX requests
+            return app(Pipeline::class)
+                ->send(Product::query())
+                ->through([
+                    SearchFilter::class,
+                    CategoryFilter::class,
+                    SortFilter::class,
+                ])
+                ->thenReturn()
+                ->orderBy('id', 'desc')
+                ->paginate(10);
+        });
+
+        // Handle AJAX requests
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
                 'html' => view('product.partials.product-list', compact('products'))->render(),
                 'pagination' => $products->appends($request->all())->links()->render(),
                 'total' => $products->total(),
-                'search_summary' => $this->getSearchSummary($request, $products->total())
+                'from_cache' => $fromCache,
+                'search_summary' => $this->getSearchSummary($request, $products->total()),
             ]);
         }
 
-        return view('product.index', compact('products'));
+        return view('product.index', compact('products', 'fromCache'));
     }
-
 
     private function getSearchSummary(Request $request, $total)
     {
         $summary = '';
-        
+
         if ($request->filled('search')) {
-            $summary .= 'Searching for "<strong>' . e($request->search) . '</strong>"';
+            $summary .= 'Searching for "<strong>'.e($request->search).'</strong>"';
         }
-        
+
         if ($request->filled('category')) {
-            $summary .= ($summary ? ' ' : '') . 'in category "<strong>' . 
-                       ucfirst(str_replace('-', ' ', $request->category)) . '</strong>"';
+            $summary .= ($summary ? ' ' : '').'in category "<strong>'.
+                       ucfirst(str_replace('-', ' ', $request->category)).'</strong>"';
         }
-        
+
         if ($request->filled('sort')) {
-            $summary .= ($summary ? ' ' : '') . 'sorted by "<strong>' . 
-                       ucfirst(str_replace('_', ' ', $request->sort)) . '</strong>"';
+            $summary .= ($summary ? ' ' : '').'sorted by "<strong>'.
+                       ucfirst(str_replace('_', ' ', $request->sort)).'</strong>"';
         }
-        
-        $summary .= ($summary ? ' - ' : '') . $total . ' result(s) found';
-        
+
+        $summary .= ($summary ? ' - ' : '').$total.' result(s) found';
+
         return $summary;
     }
 
@@ -85,6 +93,8 @@ class ProductController extends Controller
         $barcode = $this->generateUniqueBarcode();
 
         Product::create(array_merge($request->all(), ['barcode' => $barcode]));
+        Cache::forget('products_*');
+        Cache::flush();
 
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
@@ -207,6 +217,8 @@ class ProductController extends Controller
         ]);
 
         $product->update($request->all());
+        Cache::forget('products_*'); // wildcard not work in file or db driver for cache when forget
+        Cache::flush();
 
         return redirect()->route('products.index')
             ->with('success', 'Product updated successfully');
@@ -216,6 +228,8 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
+        Cache::forget('products_*'); // wildcard not work in file or db driver for cache when forget
+        Cache::flush();
 
         return redirect()->route('products.index')
             ->with('success', 'Product deleted successfully');

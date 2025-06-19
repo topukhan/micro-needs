@@ -25,13 +25,13 @@ class SearchController extends Controller
     public function addToCache(Request $request)
     {
         $address = $request->address;
-        $key = 'address_' . md5(json_encode($address));
+        $key = 'address_'.md5(json_encode($address));
 
         // Get existing cached keys or initialize empty array
         $cachedKeys = Cache::get('address_keys', []);
 
         // Add new key if not already exists
-        if (!in_array($key, $cachedKeys)) {
+        if (! in_array($key, $cachedKeys)) {
             $cachedKeys[] = $key;
             Cache::put('address_keys', $cachedKeys, now()->addDays(30));
             Cache::put($key, $address, now()->addDays(30));
@@ -43,7 +43,7 @@ class SearchController extends Controller
     public function removeFromCache(Request $request)
     {
         $address = $request->address;
-        $key = 'address_' . md5(json_encode($address));
+        $key = 'address_'.md5(json_encode($address));
 
         Cache::forget($key);
 

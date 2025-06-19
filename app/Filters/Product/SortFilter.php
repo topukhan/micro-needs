@@ -9,7 +9,7 @@ class SortFilter
     public function handle($request, Closure $next)
     {
         $query = $next($request);
-        
+
         if (request()->filled('sort')) {
             switch (request('sort')) {
                 case 'name_asc':
@@ -36,7 +36,7 @@ class SortFilter
         } else {
             $query->orderBy('created_at', 'desc'); // default sort
         }
-        
+
         return $query;
     }
 }

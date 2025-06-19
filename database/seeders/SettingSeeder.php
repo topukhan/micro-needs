@@ -83,7 +83,7 @@ class SettingSeeder extends Seeder
                 'placeholder' => 'Enter your Typesense Protocol',
                 'hint' => 'The protocol used to connect to your Typesense server.',
             ],
-            
+
         ];
 
         foreach ($settings as $settingData) {
