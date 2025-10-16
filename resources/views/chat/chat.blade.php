@@ -260,17 +260,19 @@
             });
 
             function showAlertAndSubmit() {
-                const userInput = prompt("Enter a value for seeding:");
-
-                // If user entered something, set the value and submit the form
-                if (userInput > 500){
-                    alert("Max 500. Form not submitted.");
-                } else if (userInput !== null && userInput.trim() !== "") {
-                    document.getElementById('inputValue').value = userInput;
-                    document.getElementById('seedForm').submit();
-                } else {
+                const userInput = prompt("Enter a value for seeding (1-500):");
+                if (userInput === null || userInput.trim() === "") {
                     alert("No value entered. Form not submitted.");
+                    return;
                 }
+                const parsedInput = parseInt(userInput, 10);
+
+                if (isNaN(parsedInput) || parsedInput < 1 || parsedInput > 500) {
+                    alert("Please enter a valid integer between 1 and 500.");
+                    return;
+                }
+                document.getElementById('inputValue').value = parsedInput;
+                document.getElementById('seedForm').submit();
             }
         </script>
     @endpush

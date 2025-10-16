@@ -72,15 +72,8 @@ class ChatController extends Controller
             if (ChatMessage::count() == 0) {
                 return redirect()->back()->with('error', 'No messages found!');
             }
-            if (auth()->user()->is_admin()) {
-                ChatMessage::truncate();
-            } else {
-                if (auth()->user()->chatMessages()->count() > 0) {
-                    auth()->user()->chatMessages()->delete();
-                } else {
-                    return redirect()->back()->with('error', 'No messages found!');
-                }
-            }
+            
+            ChatMessage::truncate();
 
             return redirect()->back()->with('success', 'Messages cleared successfully!');
         } catch (\Throwable $th) {
