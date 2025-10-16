@@ -20,5 +20,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('12345678'),
             ]
         );
+        // add more 20 users
+        User::factory()->count(20)->create();
     }
 }

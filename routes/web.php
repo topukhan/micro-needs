@@ -4,6 +4,7 @@ use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\API\CountryController;
 use App\Http\Controllers\ApiSimulatorController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\FormBuilder\FormBuilderController;
 use App\Http\Controllers\gatePolicy\PostController;
 use App\Http\Controllers\HashController;
@@ -111,6 +112,13 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('/articles', ArticleController::class);
     Route::resource('/products', ProductController::class);
+
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat');
+    Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+    Route::get('/chat/messages', [ChatController::class, 'getMessages'])->name('chat.messages');
+    Route::delete('/chat/{message}', [ChatController::class, 'destroy'])->name('chat.delete');
+    Route::delete('/chats/clear', [ChatController::class, 'clearMessages'])->name('chat.clear');
+    Route::get('/seed/messages', [ChatController::class, 'seedMessages'])->name('chat.seed');
 
 });
 

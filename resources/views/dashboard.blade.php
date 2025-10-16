@@ -135,7 +135,18 @@
                         </div>
                     </a>
 
-
+                    <!-- Web Socket Button -->
+                    <a href="{{ route('chat') }}" class="group relative overflow-hidden rounded-xl bg-gradient-to-br from-rose-500 to-rose-600 p-0.5 shadow-lg transition-all hover:shadow-rose-500/20 hover:scale-[1.02]">
+                        <div class="rounded-[10px] bg-white p-6 h-full flex flex-col items-center justify-center transition duration-300 group-hover:bg-opacity-0">
+                            <div class="rounded-full bg-rose-100 p-4 mb-4 text-rose-600 group-hover:text-white group-hover:bg-opacity-20">    
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9 9 7 7 9" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17 9 15 7 17" />
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 group-hover:text-white">Web Socket</h3>
+                        </div>
+                    </a>
 
                     <!-- Add new button -->
                 </div>
