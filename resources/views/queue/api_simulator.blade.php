@@ -36,6 +36,7 @@
                             Clear Logs
                         </button>
                     </div>
+                    <span class="text-xs text-gray-600">Note: run queue:work and make sure QUEUE_CONNECTION is set to "database"</span>
                 </div>
             </div>
 

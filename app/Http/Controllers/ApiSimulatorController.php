@@ -15,7 +15,8 @@ class ApiSimulatorController extends Controller
 
     public function dispatchRequests(Request $request)
     {
-        $count = $request->input('count', 10);
+        $count = $request->integer('count', 10);
+        $count = min($count, 50);
 
         // Clear previous values and initialize
         cache()->put('processed_requests', 0);
