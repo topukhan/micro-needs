@@ -19,10 +19,10 @@ class ProductController extends Controller
     // Display a listing of products
     public function index(Request $request)
     {
+        $startTime = microtime(true);
         $cacheKey = 'products_'.md5(json_encode($request->all()));
         $fromCache = Cache::has($cacheKey);
         $products = Cache::remember($cacheKey, now()->addMinutes(60), function () {
-            $fromCache = false;
 
             return app(Pipeline::class)
                 ->send(Product::query())
@@ -36,6 +36,14 @@ class ProductController extends Controller
                 ->paginate(10);
         });
 
+        $endTime = microtime(true);
+        $queryTimeMs = round(($endTime - $startTime) * 1000, 2); // in milliseconds
+        if (! $request->has('search_source')) {
+            $request->merge(['search_source' => $fromCache ? 'cache' : 'database']);
+        }
+
+        $searchSource = $request->input('search_source', 'none');
+
         // Handle AJAX requests
         if ($request->ajax()) {
             return response()->json([
@@ -44,11 +52,13 @@ class ProductController extends Controller
                 'pagination' => $products->appends($request->all())->links()->render(),
                 'total' => $products->total(),
                 'from_cache' => $fromCache,
+                'search_source' => $searchSource,
+                'query_time_ms' => $queryTimeMs,
                 'search_summary' => $this->getSearchSummary($request, $products->total()),
             ]);
         }
 
-        return view('product.index', compact('products', 'fromCache'));
+        return view('product.index', compact('products', 'fromCache', 'searchSource', 'queryTimeMs'));
     }
 
     private function getSearchSummary(Request $request, $total)
@@ -61,12 +71,12 @@ class ProductController extends Controller
 
         if ($request->filled('category')) {
             $summary .= ($summary ? ' ' : '').'in category "<strong>'.
-                       ucfirst(str_replace('-', ' ', $request->category)).'</strong>"';
+                ucfirst(str_replace('-', ' ', $request->category)).'</strong>"';
         }
 
         if ($request->filled('sort')) {
             $summary .= ($summary ? ' ' : '').'sorted by "<strong>'.
-                       ucfirst(str_replace('_', ' ', $request->sort)).'</strong>"';
+                ucfirst(str_replace('_', ' ', $request->sort)).'</strong>"';
         }
 
         $summary .= ($summary ? ' - ' : '').$total.' result(s) found';
@@ -94,7 +104,7 @@ class ProductController extends Controller
 
         Product::create(array_merge($request->all(), ['barcode' => $barcode]));
         Cache::forget('products_*');
-        Cache::flush();
+        // Cache::flush();
 
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }

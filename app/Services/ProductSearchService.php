@@ -3,18 +3,38 @@
 namespace App\Services;
 
 use App\Models\Product;
+use Illuminate\Support\Facades\Log;
 
 class ProductSearchService
 {
-    public function search(string $query)
+    public function search(string $query): array
     {
-        if (config('scout.driver') === 'typesense') {
-            $results = Product::search($query)->get();
+        $source = 'database';
+        $results = null;
 
-            return $results->pluck('id')->toArray();
+        if (config('scout.driver') === 'typesense') {
+            try {
+                $results = Product::search($query)->get();
+                $source = 'typesense';
+            } catch (\Throwable $e) {
+                Log::warning('Typesense unavailable, fallback to DB search', [
+                    'error' => $e->getMessage(),
+                ]);
+                $results = null;
+                $source = 'database';
+            }
         }
 
-        // fallback to default MySQL-like search: return null
-        return null;
+        if ($results && $results->count()) {
+            return [
+                'ids' => $results->pluck('id')->toArray(),
+                'source' => $source,
+            ];
+        }
+
+        return [
+            'ids' => null,
+            'source' => $source,
+        ];
     }
 }

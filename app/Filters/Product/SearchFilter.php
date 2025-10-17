@@ -18,10 +18,12 @@ class SearchFilter
 
         if (request()->filled('search')) {
             $search = request('search');
-            $searchResultIds = $this->searchService->search($search);
+            $result = $this->searchService->search($search);
+            // store source flag in request for later use
+            request()->merge(['search_source' => $result['source']]);
 
-            if (is_array($searchResultIds)) {
-                $query->whereIn('id', $searchResultIds);
+            if (is_array($result['ids'])) {
+                $query->whereIn('id', $result['ids']);
             } else {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")

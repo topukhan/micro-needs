@@ -25,6 +25,7 @@ class Product extends Model
             'name' => (string) $this->name,
             'category' => (string) $this->category,
             'brand' => (string) $this->brand,
+            'description' => (string) $this->description,
             'created_at' => $this->created_at->timestamp,
         ]);
     }
