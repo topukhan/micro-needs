@@ -29,4 +29,11 @@ class Product extends Model
             'created_at' => $this->created_at->timestamp,
         ]);
     }
+
+    protected static function booted()
+    {
+        static::saving(function (Product $product) {
+            $product->thumbnail = 'https://dummyjson.com/image/400x200/282828?fontFamily=pacifico&text='.urlencode($product->name);
+        });
+    }
 }
