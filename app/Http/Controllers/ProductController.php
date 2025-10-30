@@ -19,11 +19,30 @@ class ProductController extends Controller
     // Display a listing of products
     public function index(Request $request)
     {
-        $startTime = microtime(true);
-        $cacheKey = 'products_'.md5(json_encode($request->all()));
-        $fromCache = Cache::has($cacheKey);
-        $products = Cache::remember($cacheKey, now()->addMinutes(60), function () {
+        $perPage = $request->input('per_page', 12);
+        $perPage = max(1, min($perPage, 100));
+        $page = $request->input('page', 1);
 
+        $startTime = microtime(true);
+
+        // Create unique cache key for each filter combination AND page
+        $cacheParams = [
+            'search' => $request->input('search', ''),
+            'category' => $request->input('category', ''),
+            'sort' => $request->input('sort', ''),
+            'page' => $page,
+            'per_page' => $perPage
+        ];
+
+        // Remove empty values to keep cache key consistent
+        $cacheParams = array_filter($cacheParams, function ($value) {
+            return $value !== '' && $value !== null;
+        });
+
+        $cacheKey = 'products_' . md5(json_encode($cacheParams));
+        $fromCache = Cache::has($cacheKey);
+
+        $products = Cache::remember($cacheKey, now()->addMinutes(60), function () use ($perPage) {
             return app(Pipeline::class)
                 ->send(Product::query())
                 ->through([
@@ -33,54 +52,73 @@ class ProductController extends Controller
                 ])
                 ->thenReturn()
                 ->orderBy('id', 'desc')
-                ->paginate(10);
+                ->paginate($perPage);
         });
 
         $endTime = microtime(true);
-        $queryTimeMs = round(($endTime - $startTime) * 1000, 2); // in milliseconds
-        if (! $request->has('search_source')) {
-            $request->merge(['search_source' => $fromCache ? 'cache' : 'database']);
-        }
+        $queryTimeMs = round(($endTime - $startTime) * 1000, 2);
 
-        $searchSource = $request->input('search_source', 'none');
+        $searchSource = $fromCache ? 'cache' : 'database';
+        if ($request->has('search_source')) {
+            $searchSource = $request->input('search_source');
+        }
 
         // Handle AJAX requests
         if ($request->ajax()) {
-            return response()->json([
+            $response = [
                 'success' => true,
                 'html' => view('product.partials.product-list', compact('products'))->render(),
-                'pagination' => $products->appends($request->all())->links()->render(),
+                'next_page_url' => $products->nextPageUrl(),
+                'current_page' => $products->currentPage(),
+                'last_page' => $products->lastPage(),
+                'per_page' => $products->perPage(),
                 'total' => $products->total(),
+                'from' => $products->firstItem(),
+                'to' => $products->lastItem(),
+                'has_more_pages' => $products->hasMorePages(),
                 'from_cache' => $fromCache,
                 'search_source' => $searchSource,
                 'query_time_ms' => $queryTimeMs,
                 'search_summary' => $this->getSearchSummary($request, $products->total()),
-            ]);
+            ];
+
+            return response()->json($response);
         }
 
         return view('product.index', compact('products', 'fromCache', 'searchSource', 'queryTimeMs'));
     }
 
-    private function getSearchSummary(Request $request, $total)
+    private function getSearchSummary(Request $request, int $total): string
     {
-        $summary = '';
+        $parts = [];
 
         if ($request->filled('search')) {
-            $summary .= 'Searching for "<strong>'.e($request->search).'</strong>"';
+            $parts[] = "searching for <strong>" . e($request->input('search')) . "</strong>";
         }
 
         if ($request->filled('category')) {
-            $summary .= ($summary ? ' ' : '').'in category "<strong>'.
-                ucfirst(str_replace('-', ' ', $request->category)).'</strong>"';
+            $category = ucfirst(str_replace('-', ' ', $request->input('category')));
+            $parts[] = "in category <strong>{$category}</strong>";
         }
 
         if ($request->filled('sort')) {
-            $summary .= ($summary ? ' ' : '').'sorted by "<strong>'.
-                ucfirst(str_replace('_', ' ', $request->sort)).'</strong>"';
+            $sortLabels = [
+                'name_asc' => 'Name A-Z',
+                'name_desc' => 'Name Z-A',
+                'price_asc' => 'Price Low-High',
+                'price_desc' => 'Price High-Low',
+                'created_desc' => 'Newest First',
+                'created_asc' => 'Oldest First',
+            ];
+            $sortLabel = $sortLabels[$request->input('sort')] ?? $request->input('sort');
+            $parts[] = "sorted by <strong>{$sortLabel}</strong>";
         }
 
-        $summary .= ($summary ? ' - ' : '').$total.' result(s) found';
+        if (empty($parts)) {
+            return '';
+        }
 
+        $summary = "Found <strong>{$total}</strong> product(s) " . implode(', ', $parts);
         return $summary;
     }
 
@@ -130,7 +168,7 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        if (! $product) {
+        if (!$product) {
             return to_route('products.index')->with('error', 'Product not found');
         }
 
@@ -145,17 +183,17 @@ class ProductController extends Controller
     {
         try {
             // Check GD extension
-            if (! extension_loaded('gd') || ! function_exists('imagecreatefromstring')) {
+            if (!extension_loaded('gd') || !function_exists('imagecreatefromstring')) {
                 throw new \RuntimeException('GD extension not available');
             }
 
             // Check barcode generator
-            if (! class_exists(\Picqer\Barcode\BarcodeGeneratorPNG::class)) {
+            if (!class_exists(\Picqer\Barcode\BarcodeGeneratorPNG::class)) {
                 throw new \RuntimeException('Barcode generator package not installed');
             }
 
             // Validate barcode
-            if (empty($product->barcode) || ! preg_match('/^[0-9]+$/', $product->barcode)) {
+            if (empty($product->barcode) || !preg_match('/^[0-9]+$/', $product->barcode)) {
                 throw new \InvalidArgumentException('Invalid barcode format');
             }
 
@@ -198,13 +236,13 @@ class ProductController extends Controller
             $success = imagepng($finalImage);
             $imageData = ob_get_clean();
 
-            if (! $success || empty($imageData)) {
+            if (!$success || empty($imageData)) {
                 throw new \RuntimeException('Failed to generate PNG image');
             }
 
             return base64_encode($imageData);
         } catch (\Exception $e) {
-            Log::error('Barcode generation failed: '.$e->getMessage());
+            Log::error('Barcode generation failed: ' . $e->getMessage());
 
             return false;
         }
