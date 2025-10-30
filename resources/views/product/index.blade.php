@@ -1,5 +1,5 @@
 <x-frontend.layouts.master>
-    <div class="bg-white shadow rounded-lg overflow-hidden">
+    <div class="bg-white shadow rounded-lg">
         <!-- Header -->
         <div class="px-6 py-4 border-b border-gray-200 flex justify-between">
             <h2 class="text-2xl font-semibold text-gray-800">
@@ -31,7 +31,7 @@
         </div>
 
         <!-- Search Bar -->
-        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 sticky top-0 z-10 sm:static">
             <form id="searchForm" class="flex flex-col sm:flex-row gap-4">
                 @csrf
                 <div class="flex-1 relative">

@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
     @forelse ($products as $product)
         <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
             <!-- Product Image -->
@@ -6,7 +6,7 @@
                 <img 
                     src="{{ $product->thumbnail ?? 'https://placehold.co/400x300' }}"
                     alt="{{ $product->name }}"
-                    class="w-full h-48 object-cover rounded-t-lg"
+                    class="w-full h-36 object-cover rounded-t-lg"
                     loading="lazy"
                 >
                 <!-- Stock Badge -->
@@ -20,7 +20,7 @@
             </div>
 
             <!-- Product Content -->
-            <div class="p-4">
+            <div class="p-3">
                 <!-- Category & Brand -->
                 <div class="flex items-center justify-between mb-2">
                     @if ($product->category)
@@ -34,7 +34,7 @@
                 </div>
 
                 <!-- Product Name -->
-                <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                <h3 class="text-base font-semibold text-gray-900 mb-1 line-clamp-2">
                     {{ $product->name }}
                 </h3>
 
@@ -56,8 +56,8 @@
                 @endif
 
                 <!-- Price and Actions -->
-                <div class="flex items-center justify-between mt-4">
-                    <div class="text-xl font-bold text-green-600">
+                <div class="flex items-center justify-between mt-3">
+                    <div class="text-lg font-bold text-green-600">
                         ${{ number_format($product->price, 2) }}
                     </div>
                     
