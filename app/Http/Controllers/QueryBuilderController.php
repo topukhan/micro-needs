@@ -15,7 +15,7 @@ class QueryBuilderController extends Controller
         $notAllowedTables = ['migrations', 'password_reset_tokens', 'failed_jobs', 'personal_access_tokens', 'settings'];
         $allTables = $this->getAllTables();
         $allowedTables = array_diff($allTables, $notAllowedTables);
-        
+
         return view('queryBuilder.query-builder', compact('allowedTables'));
     }
 
@@ -24,7 +24,7 @@ class QueryBuilderController extends Controller
         $notAllowedTables = ['migrations', 'password_reset_tokens', 'failed_jobs', 'personal_access_tokens', 'settings'];
         $allTables = $this->getAllTables();
         $allowedTables = array_diff($allTables, $notAllowedTables);
-        
+
         if (!in_array($table, $allowedTables)) {
             return response()->json(['error' => 'Table not allowed'], 404);
         }
@@ -33,11 +33,11 @@ class QueryBuilderController extends Controller
             $columns = Schema::getColumnListing($table);
             $columns = array_values($columns);
             $columnTypes = [];
-            
+
             foreach ($columns as $column) {
                 $columnTypes[$column] = Schema::getColumnType($table, $column);
             }
-            
+
             return response()->json([
                 'columns' => $columns,
                 'column_types' => $columnTypes
@@ -110,10 +110,10 @@ class QueryBuilderController extends Controller
     private function buildQueryFromOptions(Request $request): string
     {
         $table = $request->table;
-        
+
         // Select columns
         $columns = empty($request->columns) ? ['*'] : $request->columns;
-        $select = implode(', ', array_map(function($col) {
+        $select = implode(', ', array_map(function ($col) {
             return $col === '*' ? '*' : "`$col`";
         }, $columns));
 
@@ -123,16 +123,24 @@ class QueryBuilderController extends Controller
         $whereConditions = [];
         if (!empty($request->filters)) {
             foreach ($request->filters as $filter) {
-                if (!empty($filter['column']) && !empty($filter['operator']) && isset($filter['value'])) {
+                if (!empty($filter['column']) && !empty($filter['operator'])) {
                     $column = $filter['column'];
                     $operator = $filter['operator'];
-                    $value = DB::getPdo()->quote($filter['value']);
-                    
-                    if (in_array($operator, ['LIKE', 'NOT LIKE'])) {
-                        $value = DB::getPdo()->quote("%{$filter['value']}%");
+
+                    if (in_array($operator, ['IS NULL', 'IS NOT NULL'])) {
+                        $whereConditions[] = "`$column` $operator";
+                    } else {
+                        if (!isset($filter['value'])) {
+                            continue;
+                        }
+                        $value = DB::getPdo()->quote($filter['value']);
+
+                        if (in_array($operator, ['LIKE', 'NOT LIKE'])) {
+                            $value = DB::getPdo()->quote("%{$filter['value']}%");
+                        }
+
+                        $whereConditions[] = "`$column` $operator $value";
                     }
-                    
-                    $whereConditions[] = "`$column` $operator $value";
                 }
             }
         }

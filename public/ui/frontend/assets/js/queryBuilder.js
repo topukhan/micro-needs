@@ -1,369 +1,368 @@
 // public/ui/frontend/assets/js/queryBuilder.js
 
-class QueryBuilder {
-    constructor() {
-        this.availableColumns = [];
-        this.elements = {};
-        this.init();
-    }
+document.addEventListener("DOMContentLoaded", function () {
+    const tableSelect = document.getElementById("table");
+    const aiPromptSection = document.getElementById("ai-prompt-section");
+    const manualBuilder = document.getElementById("manual-builder");
+    const useAiBtn = document.getElementById("use-ai");
+    const useManualBtn = document.getElementById("use-manual");
+    const executeBtn = document.getElementById("execute-query");
+    const promptInput = document.getElementById("prompt");
+    const columnsContainer = document.getElementById("columns-container");
+    const filtersContainer = document.getElementById("filters-container");
+    const addFilterBtn = document.getElementById("add-filter");
+    const sortBySelect = document.getElementById("sort_by");
+    const resultsSection = document.getElementById("results-section");
+    const resultsHeader = document.getElementById("results-header");
+    const resultsBody = document.getElementById("results-body");
+    const sqlQueryEl = document.getElementById("sql-query");
+    const resultCount = document.getElementById("result-count");
+    const loading = document.getElementById("loading");
+    const errorAlert = document.getElementById("error-alert");
+    const warningAlert = document.getElementById("warning-alert");
+    const copyQueryBtn = document.getElementById("copy-query");
 
-    init() {
-        this.cacheElements();
-        this.bindEvents();
-    }
+    let currentMode = "manual"; // 'ai' or 'manual'
+    let columns = [];
+    let columnTypes = {};
 
-    cacheElements() {
-        // Cache all DOM elements to avoid null errors
-        this.elements = {
-            tableSelect: document.getElementById('tableSelect'),
-            columnBtn: document.getElementById('columnBtn'),
-            columnList: document.getElementById('columnList'),
-            columnsContent: document.getElementById('columnsContent'),
-            columnsCheckbox: document.getElementById('columnsCheckbox'),
-            filtersContainer: document.getElementById('filtersContainer'),
-            addFilterBtn: document.getElementById('addFilterBtn'),
-            sortBy: document.getElementById('sortBy'),
-            sortOrder: document.getElementById('sortOrder'),
-            limit: document.getElementById('limit'),
-            promptInput: document.getElementById('promptInput'),
-            executeBtn: document.getElementById('executeBtn'),
-            resetBtn: document.getElementById('resetBtn'),
-            loading: document.getElementById('loading'),
-            warningAlert: document.getElementById('warningAlert'),
-            errorAlert: document.getElementById('errorAlert'),
-            successResults: document.getElementById('successResults'),
-            resultCount: document.getElementById('resultCount'),
-            resultTable: document.getElementById('resultTable'),
-            generatedQuery: document.getElementById('generatedQuery')
-        };
+    // Toggle AI vs Manual
+    useAiBtn.addEventListener("click", () => {
+        currentMode = "ai";
+        aiPromptSection.classList.remove("hidden");
+        manualBuilder.classList.add("hidden");
+        useAiBtn.classList.remove("bg-gray-200", "text-gray-700");
+        useAiBtn.classList.add(
+            "bg-gradient-to-r",
+            "from-purple-600",
+            "to-indigo-600",
+            "text-white"
+        );
+        useManualBtn.classList.remove(
+            "bg-gradient-to-r",
+            "from-purple-600",
+            "to-indigo-600",
+            "text-white"
+        );
+        useManualBtn.classList.add("bg-gray-200", "text-gray-700");
+        promptInput.focus();
+    });
 
-        // Check if all elements exist
-        for (const [key, element] of Object.entries(this.elements)) {
-            if (!element) {
-                console.error(`Element not found: ${key}`);
-            }
+    useManualBtn.addEventListener("click", () => {
+        currentMode = "manual";
+        aiPromptSection.classList.add("hidden");
+        manualBuilder.classList.remove("hidden");
+        useManualBtn.classList.remove("bg-gray-200", "text-gray-700");
+        useManualBtn.classList.add(
+            "bg-gradient-to-r",
+            "from-purple-600",
+            "to-indigo-600",
+            "text-white"
+        );
+        useAiBtn.classList.remove(
+            "bg-gradient-to-r",
+            "from-purple-600",
+            "to-indigo-600",
+            "text-white"
+        );
+        useAiBtn.classList.add("bg-gray-200", "text-gray-700");
+    });
+
+    // Table change → load columns
+    tableSelect.addEventListener("change", async function () {
+        const table = this.value;
+        if (!table) {
+            resetBuilder();
+            return;
         }
-    }
-
-    bindEvents() {
-        if (this.elements.tableSelect) {
-            this.elements.tableSelect.addEventListener('change', () => this.loadColumns());
-        }
-        
-        if (this.elements.addFilterBtn) {
-            this.elements.addFilterBtn.addEventListener('click', () => this.addFilter());
-        }
-        
-        if (this.elements.executeBtn) {
-            this.elements.executeBtn.addEventListener('click', () => this.executeQuery());
-        }
-        
-        if (this.elements.resetBtn) {
-            this.elements.resetBtn.addEventListener('click', () => this.resetForm());
-        }
-
-        // Event delegation for dynamic elements
-        if (this.elements.filtersContainer) {
-            this.elements.filtersContainer.addEventListener('click', (e) => {
-                if (e.target.classList.contains('remove-filter')) {
-                    e.target.closest('.filter-row').remove();
-                }
-            });
-        }
-    }
-
-    async loadColumns() {
-        if (!this.elements.tableSelect) return;
-        
-        const table = this.elements.tableSelect.value;
-        if (!table) return;
-
-        this.toggleElements(true);
-        this.showLoading('Loading columns...');
 
         try {
-            const response = await fetch(`/query-builder/columns/${table}`);
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const data = await response.json();
-            console.log('Columns response:', data);
+            const res = await fetch(`/query-builder/columns/${table}`);
+            if (!res.ok)
+                throw new Error(
+                    (await res.json()).error || "Failed to load columns"
+                );
+            const data = await res.json();
+            columns = data.columns;
+            columnTypes = data.column_types;
 
-            if (data.error) {
-                this.showError(data.error);
-            } else if (data.columns && Array.isArray(data.columns)) {
-                this.hideLoading();
-                this.availableColumns = data.columns;
-                this.showColumns(data.columns);
-                this.populateColumnOptions(data.columns);
-            } else {
-                throw new Error('Invalid columns data received');
-            }
-        } catch (error) {
-            console.error('Load columns error:', error);
-            this.showError(`Failed to load columns: ${error.message}`);
+            populateColumns();
+            populateFiltersAndSort();
+            executeBtn.disabled = false;
+        } catch (err) {
+            showError(err.message);
         }
-    }
+    });
 
-    showColumns(columns) {
-        if (!Array.isArray(columns)) {
-            console.error('Columns is not an array:', columns);
-            this.showError('Invalid columns data received');
-            return;
-        }
-        
-        if (this.elements.columnList && this.elements.columnsContent) {
-            this.elements.columnList.classList.remove('hidden');
-            this.elements.columnsContent.innerHTML = 
-                `<strong>Available Columns (${columns.length}):</strong> ${columns.join(', ')}`;
-        }
-    }
+    function populateColumns() {
+        columnsContainer.innerHTML = "";
+        const allCheckbox = createCheckbox("*", "*", true);
+        columnsContainer.appendChild(allCheckbox);
 
-    populateColumnOptions(columns) {
-        this.updateCheckboxes(columns);
-        this.updateSelects(columns);
-    }
-
-    updateCheckboxes(columns) {
-        if (!this.elements.columnsCheckbox) {
-            console.error('columnsCheckbox element not found');
-            return;
-        }
-
-        this.elements.columnsCheckbox.innerHTML = columns.map(column => `
-            <div class="flex items-center">
-                <input type="checkbox" id="col_${column}" name="columns[]" value="${column}" 
-                       class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
-                <label for="col_${column}" class="ml-2 text-sm text-gray-700">${column}</label>
-            </div>
-        `).join('');
-    }
-
-    updateSelects(columns) {
-        const options = columns.map(col => `<option value="${col}">${col}</option>`).join('');
-        
-        if (this.elements.sortBy) {
-            this.elements.sortBy.innerHTML = `<option value="">No sorting</option>${options}`;
-        }
-        
-        // Update existing filter selects
-        document.querySelectorAll('.filter-column').forEach(select => {
-            select.innerHTML = `<option value="">Select column</option>${options}`;
+        columns.forEach((col) => {
+            const checkbox = createCheckbox(col, col, false);
+            columnsContainer.appendChild(checkbox);
         });
     }
 
-    addFilter() {
-        if (!this.elements.filtersContainer) return;
-        
-        const template = document.getElementById('filterTemplate');
-        if (!template) {
-            console.error('Filter template not found');
-            return;
-        }
-
-        const clone = template.cloneNode(true);
-        clone.classList.remove('hidden');
-        clone.removeAttribute('id');
-        
-        // Populate columns in the new filter
-        const columnSelect = clone.querySelector('.filter-column');
-        if (columnSelect) {
-            columnSelect.innerHTML = `<option value="">Select column</option>${
-                this.availableColumns.map(col => `<option value="${col}">${col}</option>`).join('')
-            }`;
-        }
-        
-        this.elements.filtersContainer.appendChild(clone);
+    function createCheckbox(value, label, checked = false) {
+        const div = document.createElement("div");
+        div.className = "flex items-center";
+        div.innerHTML = `
+            <input type="checkbox" value="${value}" ${
+            checked ? "checked" : ""
+        } class="column-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded">
+            <label class="ml-2 text-sm text-gray-700">${label}</label>
+        `;
+        return div;
     }
 
-    resetForm() {
-        if (this.elements.tableSelect) this.elements.tableSelect.value = '';
-        if (this.elements.promptInput) this.elements.promptInput.value = '';
-        if (this.elements.sortBy) this.elements.sortBy.value = '';
-        if (this.elements.sortOrder) this.elements.sortOrder.value = 'asc';
-        if (this.elements.limit) this.elements.limit.value = '';
-        if (this.elements.filtersContainer) this.elements.filtersContainer.innerHTML = '';
-        if (this.elements.columnList) this.elements.columnList.classList.add('hidden');
-        if (this.elements.executeBtn) this.elements.executeBtn.disabled = true;
-        if (this.elements.columnsCheckbox) this.elements.columnsCheckbox.innerHTML = '';
-        
-        this.hideResults();
-        this.availableColumns = [];
+    function populateFiltersAndSort() {
+        // Populate column selects
+        document.querySelectorAll(".column-select").forEach((select) => {
+            populateColumnSelect(select);
+        });
+        populateColumnSelect(sortBySelect);
     }
 
-    async executeQuery() {
-        const formData = this.collectFormData();
-        
-        if (!formData.table) {
-            alert('Please select a table');
-            return;
-        }
+    function populateColumnSelect(select) {
+        const current = select.value;
+        select.innerHTML = '<option value="">-- Column --</option>';
+        columns.forEach((col) => {
+            const opt = document.createElement("option");
+            opt.value = col;
+            opt.textContent = col;
+            if (col === current) opt.selected = true;
+            select.appendChild(opt);
+        });
+    }
 
-        this.showLoading('Generating and executing query...');
-        this.hideResults();
+    // Add Filter Row
+    addFilterBtn.addEventListener("click", () => {
+        const row = document.createElement("div");
+        row.className = "filter-row flex gap-2 items-center";
+        row.innerHTML = `
+            <select class="column-select flex-1 px-3 py-2 border border-gray-300 rounded-md"></select>
+            <select class="operator-select w-32 px-3 py-2 border border-gray-300 rounded-md">
+                <option value="=">=</option>
+                <option value="!=">!=</option>
+                <option value=">">></option>
+                <option value="<"><</option>
+                <option value=">=">>=</option>
+                <option value="<="><=</option>
+                <option value="LIKE">LIKE</option>
+                <option value="NOT LIKE">NOT LIKE</option>
+                <option value="IS NULL">IS NULL</option>
+                <option value="IS NOT NULL">IS NOT NULL</option>
+            </select>
+            <input type="text" class="value-input flex-1 px-3 py-2 border border-gray-300 rounded-md" placeholder="Value">
+            <button type="button" class="remove-filter text-red-600 hover:text-red-800">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        `;
+        filtersContainer.appendChild(row);
+        populateColumnSelect(row.querySelector(".column-select"));
+
+        row.querySelector(".remove-filter").addEventListener("click", () =>
+            row.remove()
+        );
+    });
+
+    // Remove filter
+    filtersContainer.addEventListener("click", (e) => {
+        if (e.target.closest(".remove-filter")) {
+            e.target.closest(".filter-row").remove();
+        }
+    });
+
+    // Execute Query
+    executeBtn.addEventListener("click", async function () {
+        hideAlerts();
+        loading.classList.remove("hidden");
+        resultsSection.classList.add("hidden");
+
+        const table = tableSelect.value;
+        const payload = { table };
+
+        if (currentMode === "ai") {
+            payload.prompt = promptInput.value.trim();
+            if (!payload.prompt) {
+                showError("Please enter an AI prompt.");
+                loading.classList.add("hidden");
+                return;
+            }
+        } else {
+            // Manual mode
+            const selectedCols = Array.from(
+                document.querySelectorAll(".column-checkbox:checked")
+            ).map((cb) => cb.value);
+            if (selectedCols.length === 0) {
+                showError("Please select at least one column.");
+                loading.classList.add("hidden");
+                return;
+            }
+            payload.columns = selectedCols.includes("*") ? null : selectedCols;
+
+            const filters = [];
+            document.querySelectorAll(".filter-row").forEach((row) => {
+                const col = row.querySelector(".column-select").value;
+                const op = row.querySelector(".operator-select").value;
+                const valInput = row.querySelector(".value-input");
+                let val = valInput ? valInput.value.trim() : "";
+
+                if (col && op) {
+                    if (op === "IS NULL" || op === "IS NOT NULL") {
+                        // No value needed
+                        filters.push({
+                            column: col,
+                            operator: op,
+                            value: null,
+                        });
+                        // Optionally hide/disable input
+                        if (valInput) valInput.disabled = true;
+                    } else {
+                        if (val === "") return; // skip if value empty
+                        filters.push({ column: col, operator: op, value: val });
+                        if (valInput) valInput.disabled = false;
+                    }
+                }
+            });
+            if (filters.length > 0) payload.filters = filters;
+
+            const sortBy = sortBySelect.value;
+            if (sortBy) payload.sort_by = sortBy;
+            payload.sort_order = document.getElementById("sort_order").value;
+
+            const limit = document.getElementById("limit").value;
+            if (limit) payload.limit = parseInt(limit);
+        }
 
         try {
-            const response = await fetch('/execute-query', {
-                method: 'POST',
+            const res = await fetch("/execute-query", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector(
+                        'meta[name="csrf-token"]'
+                    ).content,
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(payload),
             });
 
-            const data = await response.json();
-            this.handleResponse(data);
-        } catch (error) {
-            this.showError('Network error: ' + error.message);
+            const data = await res.json();
+
+            if (!res.ok) {
+                if (data.suspicious) {
+                    showWarning(data.warning);
+                } else {
+                    showError(data.error || "Query failed");
+                }
+                return;
+            }
+
+            displayResults(data);
+        } catch (err) {
+            showError("Network error: " + err.message);
         } finally {
-            this.hideLoading();
+            loading.classList.add("hidden");
         }
+    });
+
+    function displayResults(data) {
+        resultsSection.classList.remove("hidden");
+        resultCount.textContent = data.count;
+        sqlQueryEl.textContent = data.query;
+
+        // Table headers
+        resultsHeader.innerHTML = "";
+        const sample = data.data[0] || {};
+        Object.keys(sample).forEach((key) => {
+            const th = document.createElement("th");
+            th.className =
+                "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider";
+            th.textContent = key;
+            resultsHeader.appendChild(th);
+        });
+
+        // Table body
+        resultsBody.innerHTML = "";
+        data.data.forEach((row) => {
+            const tr = document.createElement("tr");
+            Object.values(row).forEach((value) => {
+                const td = document.createElement("td");
+                td.className =
+                    "px-6 py-4 whitespace-nowrap text-sm text-gray-900";
+                td.textContent = value === null ? "NULL" : value;
+                tr.appendChild(td);
+            });
+            resultsBody.appendChild(tr);
+        });
     }
 
-    collectFormData() {
-        const formData = {
-            table: this.elements.tableSelect?.value || '',
-            prompt: this.elements.promptInput?.value || ''
-        };
+    copyQueryBtn.addEventListener("click", () => {
+        navigator.clipboard.writeText(sqlQueryEl.textContent);
+        copyQueryBtn.textContent = "Copied!";
+        setTimeout(() => (copyQueryBtn.textContent = "Copy SQL"), 2000);
+    });
 
-        // Columns
-        const selectedColumns = Array.from(document.querySelectorAll('input[name="columns[]"]:checked'))
-            .map(cb => cb.value)
-            .filter(Boolean);
-            
-        if (selectedColumns.length > 0) {
-            formData.columns = selectedColumns;
-        }
-
-        // Filters
-        const filters = Array.from(document.querySelectorAll('.filter-row')).map(row => {
-            const column = row.querySelector('.filter-column')?.value;
-            const operator = row.querySelector('.filter-operator')?.value;
-            const value = row.querySelector('.filter-value')?.value;
-            
-            return column && value ? { column, operator, value } : null;
-        }).filter(Boolean);
-
-        if (filters.length > 0) {
-            formData.filters = filters;
-        }
-
-        // Sorting & Limit
-        const sortBy = this.elements.sortBy?.value;
-        if (sortBy) {
-            formData.sort_by = sortBy;
-            formData.sort_order = this.elements.sortOrder?.value || 'asc';
-        }
-
-        const limit = this.elements.limit?.value;
-        if (limit) {
-            formData.limit = parseInt(limit);
-        }
-
-        return formData;
+    function showError(msg) {
+        errorAlert.textContent = msg;
+        errorAlert.classList.remove("hidden");
     }
 
-    handleResponse(data) {
-        if (data.warning) {
-            this.showWarning(data.warning);
-            return;
-        }
-        
-        if (data.error) {
-            this.showError(data.error);
-            return;
-        }
-        
-        this.displayResults(data);
+    function showWarning(msg) {
+        warningAlert.textContent = msg;
+        warningAlert.classList.remove("hidden");
     }
 
-    displayResults(data) {
-        if (!data.data || !data.data.length) {
-            this.showError('No results found');
-            return;
-        }
-
-        const headers = Object.keys(data.data[0]);
-        const headerHtml = `<tr>${headers.map(h => 
-            `<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">${h}</th>`
-        ).join('')}</tr>`;
-
-        const bodyHtml = data.data.map(row => 
-            `<tr>${headers.map(h => 
-                `<td class="px-6 py-4 whitespace-nowrap text-sm">${this.formatValue(row[h])}</td>`
-            ).join('')}</tr>`
-        ).join('');
-
-        if (this.elements.resultTable) {
-            this.elements.resultTable.querySelector('thead').innerHTML = headerHtml;
-            this.elements.resultTable.querySelector('tbody').innerHTML = bodyHtml;
-        }
-
-        if (this.elements.resultCount) {
-            this.elements.resultCount.textContent = `Found ${data.count} records`;
-        }
-        
-        if (this.elements.generatedQuery && data.query) {
-            this.elements.generatedQuery.textContent = `Query: ${data.query}`;
-        }
-
-        if (this.elements.successResults) {
-            this.elements.successResults.classList.remove('hidden');
-        }
+    function hideAlerts() {
+        errorAlert.classList.add("hidden");
+        warningAlert.classList.add("hidden");
     }
 
-    formatValue(value) {
-        if (value === null || value === undefined) return '<span class="text-gray-400">null</span>';
-        if (typeof value === 'boolean') return value ? 'true' : 'false';
-        if (typeof value === 'object') return JSON.stringify(value);
-        return value.toString().substring(0, 100);
+    function resetBuilder() {
+        columnsContainer.innerHTML = "";
+        filtersContainer.innerHTML = `
+            <div class="filter-row flex gap-2 items-center">
+                <select class="column-select flex-1 px-3 py-2 border border-gray-300 rounded-md"></select>
+                <select class="operator-select w-32 px-3 py-2 border border-gray-300 rounded-md">
+                    <option value="=">=</option><option value="!=">!=</option>
+                    <option value=">">></option><option value="<"><</option>
+                    <option value=">=">>=</option><option value="<="><=</option>
+                    <option value="LIKE">LIKE</option><option value="NOT LIKE">NOT LIKE</option>
+                </select>
+                <input type="text" class="value-input flex-1 px-3 py-2 border border-gray-300 rounded-md" placeholder="Value">
+                <button type="button" class="remove-filter text-red-600 hover:text-red-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        `;
+        sortBySelect.innerHTML = '<option value="">-- None --</option>';
+        executeBtn.disabled = true;
+        resultsSection.classList.add("hidden");
+        hideAlerts();
     }
 
-    toggleElements(enabled) {
-        if (this.elements.columnBtn) this.elements.columnBtn.disabled = !enabled;
-        if (this.elements.executeBtn) this.elements.executeBtn.disabled = !enabled;
-    }
-
-    showLoading(message) {
-        if (this.elements.loading) {
-            this.elements.loading.classList.remove('hidden');
-            this.elements.loading.innerHTML = message ? 
-                `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mr-2"></div>${message}</div>` : 
-                '';
+    filtersContainer.addEventListener("change", (e) => {
+        if (e.target.classList.contains("operator-select")) {
+            const row = e.target.closest(".filter-row");
+            const valueInput = row.querySelector(".value-input");
+            const op = e.target.value;
+            if (op === "IS NULL" || op === "IS NOT NULL") {
+                valueInput.disabled = true;
+                valueInput.value = "";
+                valueInput.placeholder = "No value needed";
+            } else {
+                valueInput.disabled = false;
+                valueInput.placeholder = "Value";
+            }
         }
-    }
+    });
 
-    hideLoading() {
-        if (this.elements.loading) {
-            this.elements.loading.classList.add('hidden');
-        }
-    }
-
-    showError(message) {
-        if (this.elements.errorAlert) {
-            this.elements.errorAlert.classList.remove('hidden');
-            this.elements.errorAlert.querySelector('#errorText').textContent = message;
-        }
-    }
-
-    showWarning(message) {
-        if (this.elements.warningAlert) {
-            this.elements.warningAlert.classList.remove('hidden');
-            this.elements.warningAlert.querySelector('#warningText').textContent = message;
-        }
-    }
-
-    hideResults() {
-        if (this.elements.warningAlert) this.elements.warningAlert.classList.add('hidden');
-        if (this.elements.errorAlert) this.elements.errorAlert.classList.add('hidden');
-        if (this.elements.successResults) this.elements.successResults.classList.add('hidden');
-    }
-}
-
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    new QueryBuilder();
+    // ADD THIS LINE BELOW — triggers change event on all existing operator selects
+    document
+        .querySelectorAll(".operator-select")
+        .forEach((sel) => sel.dispatchEvent(new Event("change")));
+    // Initialize
+    useManualBtn.click(); // default to manual
 });

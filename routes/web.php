@@ -121,9 +121,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/chats/clear', [ChatController::class, 'clearMessages'])->name('chat.clear');
     Route::get('/seed/messages', [ChatController::class, 'seedMessages'])->name('chat.seed');
 
-    Route::get('/query-builder', [QueryBuilderController::class, 'index']);
-    Route::get('/query-builder/columns/{table}', [QueryBuilderController::class, 'getColumns']);
-    Route::post('/execute-query', [QueryBuilderController::class, 'execute']);
+    Route::get('/query-builder', [QueryBuilderController::class, 'index'])->name('query.builder');
+    Route::get('/query-builder/columns/{table}', [QueryBuilderController::class, 'getColumns'])->name('query.builder.columns');
+    Route::post('/execute-query', [QueryBuilderController::class, 'execute'])->name('query.builder.execute');
 
 });
 

@@ -148,6 +148,18 @@
                         </div>
                     </a>
 
+                    <!-- Query Builder Button -->
+                    <a href="{{ route('query.builder') }}" class="group relative overflow-hidden rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 p-0.5 shadow-lg transition-all hover:shadow-teal-500/20 hover:scale-[1.02]">
+                        <div class="rounded-[10px] bg-white p-6 h-full flex flex-col items-center justify-center transition duration-300 group-hover:bg-opacity-0">
+                            <div class="rounded-full bg-teal-100 p-4 mb-4 text-teal-600 group-hover:text-white group-hover:bg-opacity-20">    
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10h6a2 2 0 012 2v8a2 2 0 01-2 2H7a2 2 0 01-2-2V10zm6 0h6a2 2 0 012 2v8a2 2 0 01-2 2h-6a2 2 0 01-2-2z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 group-hover:text-white">Query Builder</h3>
+                        </div>
+                    </a>
+
                     <!-- Add new button -->
                 </div>
             </div>
