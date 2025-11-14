@@ -14,6 +14,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaymentGateway\SslCommerzPaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QueryBuilderController;
 use App\Http\Controllers\Redis\RedisWizardController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
@@ -119,6 +120,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/chat/{message}', [ChatController::class, 'destroy'])->name('chat.delete');
     Route::delete('/chats/clear', [ChatController::class, 'clearMessages'])->name('chat.clear');
     Route::get('/seed/messages', [ChatController::class, 'seedMessages'])->name('chat.seed');
+
+    Route::get('/query-builder', [QueryBuilderController::class, 'index']);
+    Route::get('/query-builder/columns/{table}', [QueryBuilderController::class, 'getColumns']);
+    Route::post('/execute-query', [QueryBuilderController::class, 'execute']);
 
 });
 
