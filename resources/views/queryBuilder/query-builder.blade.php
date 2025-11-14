@@ -136,6 +136,9 @@
 @push('scripts')
     <script>
         window.allowedTables = @json($allowedTables);
+            new TomSelect("#table", {
+            closeAfterSelect: true,
+        });
     </script>
     <script src="{{ asset('ui/frontend/assets/js/queryBuilder.js') }}"></script>
 @endpush
