@@ -16,6 +16,10 @@ class Product extends Model
         'description',
         'quantity',
         'barcode',
+        'thumbnail',
+        'category',
+        'brand',
+        'rating',
     ];
 
     public function toSearchableArray()
@@ -33,7 +37,9 @@ class Product extends Model
     protected static function booted()
     {
         static::saving(function (Product $product) {
-            $product->thumbnail = 'https://dummyjson.com/image/400x200/282828?fontFamily=pacifico&text='.urlencode($product->name);
+            if (blank($product->thumbnail)) {
+                $product->thumbnail = 'https://dummyjson.com/image/400x200/282828?fontFamily=pacifico&text=' . urlencode($product->name);
+            }
         });
     }
 }
