@@ -186,35 +186,29 @@ return [
             Product::class => [
                 'collection-schema' => [
                     'fields' => [
+                        ['name' => 'id', 'type' => 'string'],
+                        ['name' => 'name', 'type' => 'string'],
+                        ['name' => 'category', 'type' => 'string'],
+                        ['name' => 'brand', 'type' => 'string'],
+                        ['name' => 'description', 'type' => 'string'],
+                        ['name' => 'created_at', 'type' => 'int64'],
+                        // for semantic
                         [
-                            'name' => 'id',
-                            'type' => 'string',
-                        ],
-                        [
-                            'name' => 'name',
-                            'type' => 'string',
-                        ],
-                        [
-                            'name' => 'category',
-                            'type' => 'string',
-                        ],
-                        [
-                            'name' => 'brand',
-                            'type' => 'string',
-                        ],
-                        [
-                            'name' => 'description',
-                            'type' => 'string',
-                        ],
-                        [
-                            'name' => 'created_at',
-                            'type' => 'int64',
+                            'name' => 'embedding',
+                            'type' => 'float[]',
+                            'embed' => [
+                                'from' => ['name', 'description', 'category'], // Fields to analyze
+                                'model_config' => [
+                                    'model_name' => 'ts/all-MiniLM-L12-v2' // Runs locally in your Typesense container
+                                ]
+                            ]
                         ],
                     ],
                     'default_sorting_field' => 'created_at',
                 ],
                 'search-parameters' => [
-                    'query_by' => 'name,description,category,brand',
+                    'query_by' => 'name,description,category,brand,embedding',
+                    'prefix'   => 'false', // Prefix search (e.g., "sh" for "shoes") can mess with semantic results
                 ],
             ],
         ],

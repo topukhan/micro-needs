@@ -58,7 +58,7 @@
                 <!-- Price and Actions -->
                 <div class="flex items-center justify-between mt-3">
                     <div class="text-lg font-bold text-green-600">
-                        ${{ number_format($product->price, 2) }}
+                        {{ number_format($product->price, 2) }}
                     </div>
                     
                     <!-- Action Buttons -->

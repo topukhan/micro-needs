@@ -44,7 +44,7 @@
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">Price</dt>
-                                <dd class="mt-1 text-lg font-bold text-green-600">${{ number_format($product->price, 2) }}</dd>
+                                <dd class="mt-1 text-lg font-bold text-green-600">{{ number_format($product->price, 2) }}</dd>
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">Quantity in Stock</dt>
